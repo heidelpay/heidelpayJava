@@ -33,7 +33,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.heidelpay.payment.PaymentException;
 import com.heidelpay.payment.communication.HeidelpayRestCommunication;
@@ -48,7 +49,7 @@ import com.heidelpay.payment.communication.json.JsonErrorObject;
  */
 public class RestCommunication implements HeidelpayRestCommunication {
 
-	private final static Logger logger = Logger.getLogger(RestCommunication.class);
+	private final static Logger logger = LoggerFactory.getLogger(RestCommunication.class);
 
 	public String httpGet(String url, String privateKey) throws HttpCommunicationException {
 		HttpGet httpGet = getHttpGet(url);
@@ -109,14 +110,14 @@ public class RestCommunication implements HeidelpayRestCommunication {
 
 	private String execute(HttpUriRequest httpPost) throws HttpCommunicationException {
 		CloseableHttpResponse response = null;
-		logger.debug(httpPost);
+		logger.debug(String.valueOf(httpPost));
 		try {
 			response = getHttpClient().execute(httpPost);
 
 			StatusLine status = response.getStatusLine();
 			String content;
 			content = EntityUtils.toString(response.getEntity());
-			logger.debug(status);
+			logger.debug(String.valueOf(status));
 			logger.debug(content);
 
 			if (status.getStatusCode() > 201 || status.getStatusCode() < 200) {

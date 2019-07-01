@@ -23,7 +23,8 @@ package com.heidelpay.payment.service;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.heidelpay.payment.Recurring;
 import com.heidelpay.payment.paymenttypes.PaymentType;
@@ -39,7 +40,7 @@ public class UrlUtil {
 
 	private static final String RECURRING_URL = "types/<typeId>/recurring";
 
-	public final static Logger logger = Logger.getLogger(UrlUtil.class);
+	public final static Logger logger = LoggerFactory.getLogger(UrlUtil.class);
 
 	private PropertiesUtil properties = new PropertiesUtil();
 
