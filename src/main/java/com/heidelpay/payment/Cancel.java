@@ -35,6 +35,7 @@ public class Cancel extends AbstractPayment {
 	private BigDecimal amount;
 	private Processing processing = new Processing();
 	private Status status;
+	private String paymentReference;
 
 	public Cancel() {
 		super();
@@ -71,5 +72,11 @@ public class Cancel extends AbstractPayment {
 		this.status = status;
 	}
 
+	public String getPaymentReference() {
+		return paymentReference;
+	}
 
+	public void setPaymentReference(String paymentReference) {
+		this.paymentReference = paymentReference;
+	}
 }
