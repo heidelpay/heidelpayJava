@@ -133,7 +133,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		assertValidCancel(cancel, getAmount());
 	}
 
-	@Ignore("Wait for Hire purchase SDK implementation")
+	@Test
 	public void testPartialCancellationBeforeShipment() throws HttpCommunicationException, ParseException, MalformedURLException {
 		HirePurchaseRatePlan ratePlan = createHirePurchaseType(getHirePurchaseRatePlan());
 		HirePurchaseRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
@@ -145,8 +145,13 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		
 		Charge charge = authorization.charge();
 		assertValidCharge(charge);
-		
-		Cancel cancel = charge.cancel(BigDecimal.ONE);
+
+		Cancel cancelReq = new Cancel();
+		cancelReq.setAmountGross(BigDecimal.TEN);
+		cancelReq.setAmountNet(BigDecimal.TEN);
+		cancelReq.setAmountVat(BigDecimal.TEN);
+		Cancel cancel = charge.cancel(cancelReq);
+
 		assertValidCancel(cancel, getBigDecimalTwoDigits(856.49));
 	}
 
