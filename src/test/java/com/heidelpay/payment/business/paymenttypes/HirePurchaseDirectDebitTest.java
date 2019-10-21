@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.heidelpay.payment.Authorization;
@@ -132,7 +133,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		assertValidCancel(cancel, getAmount());
 	}
 
-	@Test
+	@Ignore("Wait for Hire purchase SDK implementation")
 	public void testPartialCancellationBeforeShipment() throws HttpCommunicationException, ParseException, MalformedURLException {
 		HirePurchaseRatePlan ratePlan = createHirePurchaseType(getHirePurchaseRatePlan());
 		HirePurchaseRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
