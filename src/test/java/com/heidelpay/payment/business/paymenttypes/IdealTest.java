@@ -42,7 +42,6 @@ public class IdealTest extends AbstractPaymentTest {
 		assertNotNull(ideal.getId());
 	}
 
-	@Ignore("Due to wrong IDEAL setting")
 	@Test
 	public void testChargeIdealType() throws HttpCommunicationException, MalformedURLException {
 		Ideal ideal = getHeidelpay().createPaymentType(getIdeal());
