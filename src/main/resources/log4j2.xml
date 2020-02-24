@@ -1,23 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
-	<Appenders>
-		<Console name="LogToConsole" target="SYSTEM_OUT">
-			<PatternLayout pattern="%d{ISO8601} [%X{eventId}] [%X{tryTime}] [%t] [%p] %X{resourceUrl}[%c{1}%X{methodName}] - %m%n" />
-		</Console>
-		<File name="LogToFile" fileName="logging.log">
-            <PatternLayout pattern = "%d{ISO8601} [%X{eventId}] [%X{tryTime}] [%t] [%p] %X{resourceUrl}[%c{1}%X{methodName}] - %m%n" />
-        </File>
-	</Appenders>
-	<Loggers>
-		<Logger name="com.heidelpay.payment" level="debug"
-			additivity="false">
-			<AppenderRef ref="LogToConsole" />
-		</Logger>
-		
-		<Root level="DEBUG">
-			<AppenderRef ref="LogToConsole" />
-			<AppenderRef ref="LogToFile" />
-		</Root>
-		
-	</Loggers>
-</Configuration>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<log4j:configuration>
+  <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern"
+        value="%d{ISO8601} [%X{clientIp}][%t] [%p] [%X{resourceUrl}][%X{traceId}][%X{sessionId}][%X{merchantId}][%X{merchantName}][%X{merchantPublicKey}][%X{errorId}][%c{1}.%X{methodName}][%X{transasctionUuid}][%X{typeId}][%X{paymentId}][%X{orderId}][%X{externalOrderId}][%X{sdmPdfLink}][%X{customerId}][%X{customerExternalId}][%X{basketId}][%X{basketUuid}][%X{basketItemReferenceId}][%X{metadataId}][%X{paypageId}][%X{amount}] - %m%n" />
+    </layout>
+  </appender>
+
+  <appender name="graylog2" class="org.graylog2.log.GelfAppender">
+    <param name="graylogHost" value="tcp:graylog.heidelpay.cloud" />
+    <param name="originHost" value="dev-papi" />
+    <param name="facility" value="gelf-java" />
+    <param name="layout" value="org.apache.log4j.PatternLayout" />
+    <param name="extractStacktrace" value="true" />
+    <param name="addExtendedInformation" value="true" />
+    <param name="additionalFields" value="{'environment': 'DEV', 'application': 'papi'}" />
+  </appender>
+
+  <appender name="default.file" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="File" value="log/logging.log" />
+    <param name="Encoding" value="UTF-8" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern"
+        value="%d{ISO8601} [%X{clientIp}][%t] [%p] [%X{resourceUrl}][%X{traceId}][%X{sessionId}][%X{merchantId}][%X{merchantName}][%X{merchantPublicKey}][%X{errorId}][%c{1}.%X{methodName}][%X{transasctionUuid}][%X{typeId}][%X{paymentId}][%X{orderId}][%X{externalOrderId}][%X{sdmPdfLink}][%X{customerId}][%X{customerExternalId}][%X{basketId}][%X{basketUuid}][%X{basketItemReferenceId}][%X{metadataId}][%X{paypageId}][%X{amount}] - %m%n" />
+    </layout>
+  </appender>
+
+  <appender name="async" class="org.apache.log4j.AsyncAppender">
+    <param name="Blocking" value="false"/>
+    <param name="BufferSize" value="500" />
+    <appender-ref ref="graylog2" />
+  </appender>
+
+  <logger name="com.heidelpay.payment">
+    <level value="DEBUG" />
+  </logger>
+  <root>
+    <level value="INFO" />
+    <appender-ref ref="stdout" />
+    <appender-ref ref="default.file" />
+    <!--<appender-ref ref="async" /> -->
+  </root>
+</log4j:configuration>
