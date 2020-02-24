@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="LogToConsole" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{ISO8601} [%X{eventId}] [%X{tryTime}] [%t] [%p] %X{resourceUrl}[%c{1}%X{methodName}] - %m%n" />
+		</Console>
+		<File name="LogToFile" fileName="logging.log">
+            <PatternLayout pattern = "%d{ISO8601} [%X{eventId}] [%X{tryTime}] [%t] [%p] %X{resourceUrl}[%c{1}%X{methodName}] - %m%n" />
+        </File>
+	</Appenders>
+	<Loggers>
+		<Logger name="com.heidelpay.payment" level="debug"
+			additivity="false">
+			<AppenderRef ref="LogToConsole" />
+		</Logger>
+		
+		<Root level="DEBUG">
+			<AppenderRef ref="LogToConsole" />
+			<AppenderRef ref="LogToFile" />
+		</Root>
+		
+	</Loggers>
+</Configuration>
