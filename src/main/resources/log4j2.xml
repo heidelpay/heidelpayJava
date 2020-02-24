@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
-<log4j:configuration>
+<Configuration>
   <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern"
@@ -42,4 +42,4 @@
     <appender-ref ref="default.file" />
     <!--<appender-ref ref="async" /> -->
   </root>
-</log4j:configuration>
+</Configuration>
