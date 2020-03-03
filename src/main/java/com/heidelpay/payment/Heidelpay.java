@@ -20,13 +20,6 @@ package com.heidelpay.payment;
  * #L%
  */
 
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.Currency;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import com.heidelpay.payment.business.paymenttypes.HirePurchaseRatePlan;
 import com.heidelpay.payment.communication.HeidelpayRestCommunication;
 import com.heidelpay.payment.communication.HttpCommunicationException;
@@ -34,6 +27,12 @@ import com.heidelpay.payment.communication.impl.HttpClientBasedRestCommunication
 import com.heidelpay.payment.paymenttypes.PaymentType;
 import com.heidelpay.payment.service.PaymentService;
 import com.heidelpay.payment.service.PaypageService;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.Currency;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * {@code Heidelpay} is a facade to the Heidelpay REST Api. The facade is
@@ -782,18 +781,36 @@ public class Heidelpay {
 	 * @throws HttpCommunicationException
 	 */
 	public Shipment shipment(String paymentId) throws HttpCommunicationException {
-		return paymentService.shipment(paymentId, null);
+		return paymentService.shipment(paymentId, null, null);
+	}
+
+	public Shipment shipment(Shipment shipment, String paymentId) throws HttpCommunicationException {
+		return paymentService.doShipment(shipment, paymentId);
 	}
 
 	/**
 	 * Inform about a shipment of goods and provide invoiceId. From this time the insurance start.
 	 * 
 	 * @param paymentId
+	 * @param invoiceId
 	 * @return Shipment with id
 	 * @throws HttpCommunicationException
 	 */
 	public Shipment shipment(String paymentId, String invoiceId) throws HttpCommunicationException {
-		return paymentService.shipment(paymentId, invoiceId);
+		return paymentService.shipment(paymentId, invoiceId, null);
+	}
+
+	/**
+	 * Inform about a shipment of goods and provide invoiceId. From this time the insurance start.
+	 *
+	 * @param paymentId
+	 * @param invoiceId
+	 * @param orderId
+	 * @return Shipment with id
+	 * @throws HttpCommunicationException
+	 */
+	public Shipment shipment(String paymentId, String invoiceId, String orderId) throws HttpCommunicationException {
+		return paymentService.shipment(paymentId, invoiceId, orderId);
 	}
 
 	/**
