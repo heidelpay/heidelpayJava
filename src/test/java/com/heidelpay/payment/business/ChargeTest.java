@@ -72,6 +72,21 @@ public class ChargeTest extends AbstractPaymentTest {
 	}
 
 	@Test
+	public void testChargeWIthInvoiceAndOrderIdIsSuccess() throws MalformedURLException, HttpCommunicationException {
+		Charge requestCharge = getCharge("1234");
+		requestCharge.setCard3ds(Boolean.FALSE);
+		requestCharge.setInvoiceId("4567");
+		Charge charge = getHeidelpay().charge(requestCharge);
+		assertNotNull(charge);
+		assertNotNull(charge.getId());
+		assertEquals("COR.000.100.112", charge.getMessage().getCode());
+		assertNotNull(charge.getMessage().getCustomer());
+		assertEquals(Charge.Status.SUCCESS, charge.getStatus());
+		assertEquals(requestCharge.getInvoiceId(), charge.getInvoiceId());
+		assertEquals(requestCharge.getOrderId(), charge.getOrderId());
+	}
+
+	@Test
 	public void testChargeWithPaymentType() throws MalformedURLException, HttpCommunicationException {
 		LocalDate locaDateNow = LocalDate.now();
 		Card card = new Card("4444333322221111", "12/" + (locaDateNow.getYear() + 1));

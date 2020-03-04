@@ -477,6 +477,7 @@ public class JsonToBusinessClassMapper {
 		processing.setIban(json.getIban());
 		processing.setPdfLink(json.getPdfLink());
 		processing.setExternalOrderId(json.getExternalOrderId());
+		processing.setZgReferenceId(json.getZgReferenceId());
 		return processing;
 	}
 
