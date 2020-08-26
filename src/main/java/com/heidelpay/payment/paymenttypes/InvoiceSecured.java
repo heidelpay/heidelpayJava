@@ -43,7 +43,7 @@ public class InvoiceSecured extends AbstractPaymentType implements PaymentType {
 
 	@Override
 	public PaymentType map(PaymentType invoiceSecured, JsonObject jsonId) {
-		if(invoiceSecured instanceof InvoiceSecured) {
+		if(invoiceSecured instanceof InvoiceSecured && jsonId instanceof JsonIdObject) {
 			((InvoiceSecured) invoiceSecured).setId(jsonId.getId());
 			((InvoiceSecured) invoiceSecured).setRecurring(((JsonIdObject) jsonId).getRecurring());
 		}
