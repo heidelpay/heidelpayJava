@@ -20,21 +20,17 @@ package com.heidelpay.payment.communication.json;
  * #L%
  */
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.heidelpay.payment.business.paymenttypes.HirePurchaseRate;
 import com.heidelpay.payment.communication.JsonDateConverter;
 
-/**
- * @deprecated @deprecated use {@code JsonInstallmentSecuredRatePlan} as a default implementation.
- */
-@Deprecated
-public class JsonHirePurchaseRatePlan extends JsonIdObject implements JsonObject {
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class JsonInstallmentSecuredRatePlan extends JsonIdObject implements JsonObject {
 
 	
 	private String iban;

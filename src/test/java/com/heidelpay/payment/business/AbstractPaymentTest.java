@@ -39,6 +39,7 @@ import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.impl.HttpClientBasedRestCommunication;
 import com.heidelpay.payment.paymenttypes.Card;
 import com.heidelpay.payment.paymenttypes.InvoiceGuaranteed;
+import com.heidelpay.payment.paymenttypes.InvoiceSecured;
 import com.heidelpay.payment.paymenttypes.SepaDirectDebit;
 import com.heidelpay.payment.service.PropertiesUtil;
 
@@ -164,9 +165,16 @@ public abstract class AbstractPaymentTest {
 		return card;
 	}
 
+	@Deprecated
 	protected InvoiceGuaranteed createPaymentTypeInvoiceGuaranteed() throws HttpCommunicationException {
 		InvoiceGuaranteed invoice = new InvoiceGuaranteed();
 		invoice = (InvoiceGuaranteed)getHeidelpay().createPaymentType(invoice);
+		return invoice;
+	}
+
+	protected InvoiceSecured createPaymentTypeInvoiceSecured() throws HttpCommunicationException {
+		InvoiceSecured invoice = new InvoiceSecured();
+		invoice = (InvoiceSecured)getHeidelpay().createPaymentType(invoice);
 		return invoice;
 	}
 

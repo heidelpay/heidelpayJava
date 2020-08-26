@@ -33,46 +33,14 @@ import com.heidelpay.payment.Payout;
 import com.heidelpay.payment.Recurring;
 import com.heidelpay.payment.Shipment;
 import com.heidelpay.payment.business.paymenttypes.HirePurchaseRatePlan;
+import com.heidelpay.payment.business.paymenttypes.InstallmentSecuredRatePlan;
 import com.heidelpay.payment.communication.HeidelpayRestCommunication;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.JsonParser;
-import com.heidelpay.payment.communication.json.JsonApplepayResponse;
-import com.heidelpay.payment.communication.json.JsonAuthorization;
-import com.heidelpay.payment.communication.json.JsonCancel;
-import com.heidelpay.payment.communication.json.JsonCard;
-import com.heidelpay.payment.communication.json.JsonCharge;
-import com.heidelpay.payment.communication.json.JsonCustomer;
-import com.heidelpay.payment.communication.json.JsonHirePurchaseRatePlan;
-import com.heidelpay.payment.communication.json.JsonHirePurchaseRatePlanList;
-import com.heidelpay.payment.communication.json.JsonIdObject;
-import com.heidelpay.payment.communication.json.JsonIdeal;
-import com.heidelpay.payment.communication.json.JsonPayment;
-import com.heidelpay.payment.communication.json.JsonPayout;
-import com.heidelpay.payment.communication.json.JsonPis;
-import com.heidelpay.payment.communication.json.JsonRecurring;
-import com.heidelpay.payment.communication.json.JsonSepaDirectDebit;
-import com.heidelpay.payment.communication.json.JsonShipment;
-import com.heidelpay.payment.communication.json.JsonTransaction;
+import com.heidelpay.payment.communication.json.*;
 import com.heidelpay.payment.communication.mapper.JsonToBusinessClassMapper;
-import com.heidelpay.payment.paymenttypes.AbstractPaymentType;
-import com.heidelpay.payment.paymenttypes.Alipay;
-import com.heidelpay.payment.paymenttypes.Applepay;
-import com.heidelpay.payment.paymenttypes.Card;
-import com.heidelpay.payment.paymenttypes.Eps;
-import com.heidelpay.payment.paymenttypes.Giropay;
-import com.heidelpay.payment.paymenttypes.Ideal;
-import com.heidelpay.payment.paymenttypes.Invoice;
-import com.heidelpay.payment.paymenttypes.InvoiceFactoring;
-import com.heidelpay.payment.paymenttypes.InvoiceGuaranteed;
-import com.heidelpay.payment.paymenttypes.PaymentType;
-import com.heidelpay.payment.paymenttypes.Paypal;
-import com.heidelpay.payment.paymenttypes.Pis;
-import com.heidelpay.payment.paymenttypes.Prepayment;
-import com.heidelpay.payment.paymenttypes.Przelewy24;
-import com.heidelpay.payment.paymenttypes.SepaDirectDebit;
-import com.heidelpay.payment.paymenttypes.SepaDirectDebitGuaranteed;
-import com.heidelpay.payment.paymenttypes.Sofort;
-import com.heidelpay.payment.paymenttypes.Wechatpay;
+import com.heidelpay.payment.paymenttypes.*;
+
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.*;
@@ -105,9 +73,20 @@ public class PaymentService {
 		this.restCommunication = restCommunication;
 	}
 
+
+	/**
+	 * @deprecated use {@code installmentSecuredPlan} as a default implementation.
+	 */
+	@Deprecated
 	public List<HirePurchaseRatePlan> hirePurchasePlan(BigDecimal amount, Currency currency, BigDecimal effectiveInterestRate, Date orderDate) throws HttpCommunicationException {
 		String response = restCommunication.httpGet(urlUtil.getHirePurchaseRateUrl(amount, currency, effectiveInterestRate, orderDate), heidelpay.getPrivateKey());
 		JsonHirePurchaseRatePlanList json = new JsonParser<Customer>().fromJson(response, JsonHirePurchaseRatePlanList.class);
+		return json.getEntity();
+	}
+
+	public List<InstallmentSecuredRatePlan> installmentSecuredPlan(BigDecimal amount, Currency currency, BigDecimal effectiveInterestRate, Date orderDate) throws HttpCommunicationException {
+		String response = restCommunication.httpGet(urlUtil.getHirePurchaseRateUrl(amount, currency, effectiveInterestRate, orderDate), heidelpay.getPrivateKey());
+		JsonInstallmentSecuredRatePlanList json = new JsonParser<Customer>().fromJson(response, JsonInstallmentSecuredRatePlanList.class);
 		return json.getEntity();
 	}
 
@@ -549,7 +528,7 @@ public class PaymentService {
 	}
 
 	private JsonIdObject getJsonObjectFromTypeId(String typeId) {
-		List<String> jsonIdObjects = Arrays.asList("eps", "gro", "ivc", "ivg", "ivf", "ppl", "ppy", "p24", "sft", "ali", "wcp");
+		List<String> jsonIdObjects = Arrays.asList("eps", "gro", "ivc", "ivg", "ivf", "ivs", "ppl", "ppy", "p24", "sft", "ali", "wcp");
 		String paymentType = typeId.substring(2, 5).toLowerCase();
 		if (jsonIdObjects.contains(paymentType)) {
 			return new JsonIdObject();
@@ -561,12 +540,16 @@ public class PaymentService {
 			return new JsonSepaDirectDebit();
 		} else if ("ddg".equalsIgnoreCase(paymentType)) {
 			return new JsonSepaDirectDebit();
+		} else if ("dds".equalsIgnoreCase(paymentType)) {
+			return new JsonSepaDirectDebit();
 		} else if ("pis".equalsIgnoreCase(paymentType)) {
 			return new JsonPis();
 		} else if ("apl".equalsIgnoreCase(paymentType)) {
 			return new JsonApplepayResponse();
 		} else if ("hdd".equalsIgnoreCase(paymentType)) {
 			return new JsonHirePurchaseRatePlan();
+		} else if ("ins".equalsIgnoreCase(paymentType)) {
+			return new JsonInstallmentSecuredRatePlan();
 		} else {
 			throw new PaymentException("Type '" + typeId + "' is currently not supported by the SDK");
 		}
@@ -577,7 +560,12 @@ public class PaymentService {
 		if (typeId.length() < 5) {
 			throw new PaymentException("TypeId '" + typeId + "' is invalid");
 		}
+		//Map<Integer, String> a = new HashMap<Integer, String>();
+		//a.put(0,"crd");
+		//a.containsValue()
 		String paymentType = getTypeIdentifier(typeId);
+		// TODO: Replace if-else workflow with a for-loop, checking if paymentType contains in a key-value-map
+		// TODO: return an int to handle a switch-case
 		if ("crd".equalsIgnoreCase(paymentType)) {
 			return new Card("", "");
 		} else if ("eps".equalsIgnoreCase(paymentType)) {
@@ -592,6 +580,8 @@ public class PaymentService {
 			return new InvoiceGuaranteed();
 		} else if ("ivf".equalsIgnoreCase(paymentType)) {
 			return new InvoiceFactoring();
+		} else if ("ivs".equalsIgnoreCase(paymentType)) {
+			return new InvoiceSecured();
 		} else if ("ppl".equalsIgnoreCase(paymentType)) {
 			return new Paypal();
 		} else if ("ppy".equalsIgnoreCase(paymentType)) {
@@ -602,6 +592,8 @@ public class PaymentService {
 			return new SepaDirectDebit("");
 		} else if ("ddg".equalsIgnoreCase(paymentType)) {
 			return new SepaDirectDebitGuaranteed("");
+		} else if ("dds".equalsIgnoreCase(paymentType)) {
+			return new SepaDirectDebitSecured("");
 		} else if ("sft".equalsIgnoreCase(paymentType)) {
 			return new Sofort();
 		} else if ("pis".equalsIgnoreCase(paymentType)) {
@@ -614,6 +606,8 @@ public class PaymentService {
 			return new Applepay();
 		} else if ("hdd".equalsIgnoreCase(paymentType)) {
 			return new HirePurchaseRatePlan();
+		}else if ("ins".equalsIgnoreCase(paymentType)) {
+			return new InstallmentSecuredRatePlan();
 		} else {
 			throw new PaymentException("Type '" + typeId + "' is currently not supported by the SDK");
 		}

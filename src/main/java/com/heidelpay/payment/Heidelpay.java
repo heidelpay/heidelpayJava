@@ -21,6 +21,7 @@ package com.heidelpay.payment;
  */
 
 import com.heidelpay.payment.business.paymenttypes.HirePurchaseRatePlan;
+import com.heidelpay.payment.business.paymenttypes.InstallmentSecuredRatePlan;
 import com.heidelpay.payment.communication.HeidelpayRestCommunication;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.impl.HttpClientBasedRestCommunication;
@@ -951,9 +952,17 @@ public class Heidelpay {
 		recurring.setMetadataId(metadataId);
 		return recurring;
 	}
-	
+
+	/**
+	 * @deprecated use {@code installmentSecuredRates} as a default implementation.
+	 */
+	@Deprecated
 	public List<HirePurchaseRatePlan> hirePurchaseRates(BigDecimal amount, Currency currency, BigDecimal effectiveInterestRate, Date orderDate) throws HttpCommunicationException {
 		return paymentService.hirePurchasePlan(amount, currency, effectiveInterestRate, orderDate);
+	}
+
+	public List<InstallmentSecuredRatePlan> installmentSecuredRates(BigDecimal amount, Currency currency, BigDecimal effectiveInterestRate, Date orderDate) throws HttpCommunicationException {
+		return paymentService.installmentSecuredPlan(amount, currency, effectiveInterestRate, orderDate);
 	}
 
 	public String getPrivateKey() {

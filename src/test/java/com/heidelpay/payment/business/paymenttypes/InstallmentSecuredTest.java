@@ -20,15 +20,15 @@ package com.heidelpay.payment.business.paymenttypes;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import com.heidelpay.payment.Authorization;
 import com.heidelpay.payment.Cancel;
 import com.heidelpay.payment.Charge;
 import com.heidelpay.payment.Shipment;
 import com.heidelpay.payment.business.AbstractPaymentTest;
 import com.heidelpay.payment.communication.HttpCommunicationException;
+import org.apache.commons.lang3.time.DateUtils;
+import org.junit.Test;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;
@@ -38,42 +38,40 @@ import java.text.SimpleDateFormat;
 import java.util.Currency;
 import java.util.Date;
 import java.util.List;
-import org.apache.commons.lang3.time.DateUtils;
-import org.junit.Test;
-/**
- * @deprecated @deprecated use {@code InstallmentSecuredTest} as a default implementation.
- */
-@Deprecated
-public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public class InstallmentSecuredTest extends AbstractPaymentTest {
 
 	@Test
 	public void testRateRetrieval() throws HttpCommunicationException, ParseException {
 		BigDecimal effectiveInterestRate = BigDecimal.valueOf(5.5).setScale(4, BigDecimal.ROUND_HALF_UP);
 		Date orderDate = getDate("21.06.2019");
-		List<HirePurchaseRatePlan> rateList = getHeidelpay().hirePurchaseRates(BigDecimal.TEN, Currency.getInstance("EUR"), effectiveInterestRate, orderDate);
+		List<InstallmentSecuredRatePlan> rateList = getHeidelpay().installmentSecuredRates(BigDecimal.TEN, Currency.getInstance("EUR"), effectiveInterestRate, orderDate);
 		assertNotNull(rateList);
 		assertEquals(6, rateList.size());
-		assertRatePlan(effectiveInterestRate, orderDate, rateList.get(0));
+		assertInstallmentSecuredRatePlan(effectiveInterestRate, orderDate, rateList.get(0));
 	}
 
 	@Test
-	public void testCreateHirePurchaseTypeWithIbanInvoiceDate() throws HttpCommunicationException, ParseException {
-		HirePurchaseRatePlan ratePlan = getHirePurchaseRatePlan();
+	public void testCreateInstallmentSecuredTypeWithIbanInvoiceDate() throws HttpCommunicationException, ParseException {
+		InstallmentSecuredRatePlan ratePlan = getInstallmentSecuredRatePlan();
 		addIbanInvoiceParameter(ratePlan);
-		HirePurchaseRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
+		InstallmentSecuredRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 	}
 	
 	@Test
-	public void testCreateHirePurchaseTypeIbanLater() throws HttpCommunicationException, ParseException {
-		HirePurchaseRatePlan ratePlan = getHirePurchaseRatePlan();
-		HirePurchaseRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
+	public void testCreateInstallmentSecuredTypeIbanLater() throws HttpCommunicationException, ParseException {
+		InstallmentSecuredRatePlan ratePlan = getInstallmentSecuredRatePlan();
+		InstallmentSecuredRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
 		addIbanInvoiceParameter(ratePlanReturned);
-		HirePurchaseRatePlan updatedPlan = getHeidelpay().updatePaymentType(ratePlanReturned);
+		InstallmentSecuredRatePlan updatedPlan = getHeidelpay().updatePaymentType(ratePlanReturned);
 		
 		assertNotNull(updatedPlan);
 		assertRatePlan(ratePlanReturned, updatedPlan);
@@ -81,9 +79,9 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 	
 	@Test
 	public void testAuthorizeViaTypeWithIban() throws HttpCommunicationException, ParseException, MalformedURLException {
-		HirePurchaseRatePlan ratePlan = getHirePurchaseRatePlan();
+		InstallmentSecuredRatePlan ratePlan = getInstallmentSecuredRatePlan();
 		addIbanInvoiceParameter(ratePlan);
-		HirePurchaseRatePlan ratePlanReturned = createHirePurchaseType(ratePlan);
+		InstallmentSecuredRatePlan ratePlanReturned = createInstallmentSecuredType(ratePlan);
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
@@ -93,9 +91,9 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 
 	@Test
 	public void testAuthorizeViaHeidelpayTypeIdWithIban() throws HttpCommunicationException, ParseException, MalformedURLException {
-		HirePurchaseRatePlan ratePlan = getHirePurchaseRatePlan();
+		InstallmentSecuredRatePlan ratePlan = getInstallmentSecuredRatePlan();
 		addIbanInvoiceParameter(ratePlan);
-		HirePurchaseRatePlan ratePlanReturned = createHirePurchaseType(ratePlan);
+		InstallmentSecuredRatePlan ratePlanReturned = createInstallmentSecuredType(ratePlan);
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
@@ -105,8 +103,8 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 	
 	@Test
 	public void testChargeViaAuthorize() throws HttpCommunicationException, ParseException, MalformedURLException {
-		HirePurchaseRatePlan ratePlan = createHirePurchaseType(getHirePurchaseRatePlan());
-		HirePurchaseRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
+		InstallmentSecuredRatePlan ratePlan = createInstallmentSecuredType(getInstallmentSecuredRatePlan());
+		InstallmentSecuredRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
@@ -119,8 +117,8 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 
 	@Test
 	public void testFullCancellationBeforeShipment() throws HttpCommunicationException, ParseException, MalformedURLException {
-		HirePurchaseRatePlan ratePlan = createHirePurchaseType(getHirePurchaseRatePlan());
-		HirePurchaseRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
+		InstallmentSecuredRatePlan ratePlan = createInstallmentSecuredType(getInstallmentSecuredRatePlan());
+		InstallmentSecuredRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
@@ -136,8 +134,8 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 
 	@Test
 	public void testPartialCancellationBeforeShipment() throws HttpCommunicationException, ParseException, MalformedURLException {
-		HirePurchaseRatePlan ratePlan = createHirePurchaseType(getHirePurchaseRatePlan());
-		HirePurchaseRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
+		InstallmentSecuredRatePlan ratePlan = createInstallmentSecuredType(getInstallmentSecuredRatePlan());
+		InstallmentSecuredRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
@@ -158,9 +156,9 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 
 	@Test
 	public void testShipment() throws HttpCommunicationException, ParseException, MalformedURLException {
-		HirePurchaseRatePlan ratePlan = getHirePurchaseRatePlan();
+		InstallmentSecuredRatePlan ratePlan = getInstallmentSecuredRatePlan();
 		addIbanInvoiceParameter(ratePlan);
-		HirePurchaseRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
+		InstallmentSecuredRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
@@ -176,9 +174,9 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 
 	@Test
 	public void testFullCancelAfterShipment() throws HttpCommunicationException, ParseException, MalformedURLException {
-		HirePurchaseRatePlan ratePlan = getHirePurchaseRatePlan();
+		InstallmentSecuredRatePlan ratePlan = getInstallmentSecuredRatePlan();
 		addIbanInvoiceParameter(ratePlan);
-		HirePurchaseRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
+		InstallmentSecuredRatePlan ratePlanReturned = getHeidelpay().createPaymentType(ratePlan);
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
@@ -233,12 +231,12 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 	private BigDecimal getAmount() {
 		BigDecimal amount = new BigDecimal(856.4900);
 		return amount.setScale(2, RoundingMode.HALF_UP);
-	}	
-	private HirePurchaseRatePlan createHirePurchaseType(HirePurchaseRatePlan ratePlan) throws ParseException, HttpCommunicationException {
+	}
+	private InstallmentSecuredRatePlan createInstallmentSecuredType(InstallmentSecuredRatePlan ratePlan) throws ParseException, HttpCommunicationException {
 		return getHeidelpay().createPaymentType(ratePlan);
 	}
 
-	private void addIbanInvoiceParameter(HirePurchaseRatePlan ratePlan) {
+	private void addIbanInvoiceParameter(InstallmentSecuredRatePlan ratePlan) {
 		ratePlan.setIban("DE89370400440532013000");
 		ratePlan.setBic("COBADEFFXXX");
 		ratePlan.setAccountHolder("Rene Felder");
@@ -246,15 +244,15 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		ratePlan.setInvoiceDueDate(DateUtils.addDays(new Date(), 10));
 	}
 
-	private HirePurchaseRatePlan getHirePurchaseRatePlan() throws ParseException, HttpCommunicationException {
+	private InstallmentSecuredRatePlan getInstallmentSecuredRatePlan() throws ParseException, HttpCommunicationException {
 		BigDecimal effectiveInterestRate = BigDecimal.valueOf(5.5);
 		Date orderDate = getDate("21.06.2019");
-		List<HirePurchaseRatePlan> rateList = getHeidelpay().hirePurchaseRates(BigDecimal.TEN, Currency.getInstance("EUR"), effectiveInterestRate, orderDate);
-		HirePurchaseRatePlan ratePlan = rateList.get(0);
+		List<InstallmentSecuredRatePlan> rateList = getHeidelpay().installmentSecuredRates(BigDecimal.TEN, Currency.getInstance("EUR"), effectiveInterestRate, orderDate);
+		InstallmentSecuredRatePlan ratePlan = rateList.get(0);
 		return ratePlan;
 	}
 
-	private void assertValidAuthorize(HirePurchaseRatePlan ratePlan, Authorization authorization) {
+	private void assertValidAuthorize(InstallmentSecuredRatePlan ratePlan, Authorization authorization) {
 		assertNotNull(authorization);
 		assertNumberEquals(getAmount(), authorization.getAmount());
 		assertEquals(Authorization.Status.SUCCESS, authorization.getStatus());
@@ -272,7 +270,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 	
 	
 	
-	private void assertRatePlan(HirePurchaseRatePlan ratePlan, HirePurchaseRatePlan ratePlanReturned) {
+	private void assertRatePlan(InstallmentSecuredRatePlan ratePlan, InstallmentSecuredRatePlan ratePlanReturned) {
 		assertEquals(ratePlan.getAccountHolder(), ratePlanReturned.getAccountHolder());
 		assertEquals(ratePlan.getBic(), ratePlanReturned.getBic());
 		assertNumberEquals(ratePlan.getEffectiveInterestRate(), ratePlanReturned.getEffectiveInterestRate());
@@ -309,7 +307,20 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		return new SimpleDateFormat("dd.MM.yyyy").format(expected);
 	}
 
-	private void assertRatePlan(BigDecimal effectiveInterestRate, Date orderDate, HirePurchaseRatePlan ratePlan) {
+	@Deprecated
+	private void assertRatePlan(BigDecimal effectiveInterestRate, Date orderDate, InstallmentSecuredRatePlan ratePlan) {
+		assertEquals(3, ratePlan.getNumberOfRates());
+		assertEquals(effectiveInterestRate, ratePlan.getEffectiveInterestRate());
+		assertEquals(new BigDecimal("10.0").setScale(4, BigDecimal.ROUND_HALF_UP), ratePlan.getTotalPurchaseAmount());
+		assertEquals(getBigDecimalFourDigits(0.08), ratePlan.getTotalInterestAmount());
+		assertEquals(ratePlan.getTotalAmount().setScale(4, BigDecimal.ROUND_HALF_UP), ratePlan.getTotalInterestAmount().add(ratePlan.getTotalPurchaseAmount()));
+		assertEquals(getBigDecimalFourDigits(3.37), ratePlan.getMonthlyRate());
+		assertEquals(getBigDecimalFourDigits(3.34), ratePlan.getLastRate());
+		assertEquals(getBigDecimalFourDigits(5.40), getBigDecimalFourDigits(ratePlan.getNominalInterestRate().doubleValue()));
+		assertEquals(orderDate, ratePlan.getOrderDate());
+	}
+
+	private void assertInstallmentSecuredRatePlan(BigDecimal effectiveInterestRate, Date orderDate, InstallmentSecuredRatePlan ratePlan) {
 		assertEquals(3, ratePlan.getNumberOfRates());
 		assertEquals(effectiveInterestRate, ratePlan.getEffectiveInterestRate());
 		assertEquals(new BigDecimal("10.0").setScale(4, BigDecimal.ROUND_HALF_UP), ratePlan.getTotalPurchaseAmount());
