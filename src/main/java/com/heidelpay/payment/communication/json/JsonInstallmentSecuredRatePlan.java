@@ -22,7 +22,7 @@ package com.heidelpay.payment.communication.json;
 
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.heidelpay.payment.business.paymenttypes.HirePurchaseRate;
+import com.heidelpay.payment.business.paymenttypes.InstallmentSecuredRate;
 import com.heidelpay.payment.communication.JsonDateConverter;
 
 import java.math.BigDecimal;
@@ -56,7 +56,7 @@ public class JsonInstallmentSecuredRatePlan extends JsonIdObject implements Json
 	private BigDecimal feePerRate;
 	private BigDecimal monthlyRate;
 	private BigDecimal lastRate;
-	private List<HirePurchaseRate> rateList = new ArrayList<HirePurchaseRate>();
+	private List<InstallmentSecuredRate> rateList = new ArrayList<InstallmentSecuredRate>();
 	
 	public int getNumberOfRates() {
 		return numberOfRates;
@@ -124,10 +124,10 @@ public class JsonInstallmentSecuredRatePlan extends JsonIdObject implements Json
 	public void setLastRate(BigDecimal lastRate) {
 		this.lastRate = lastRate;
 	}
-	public List<HirePurchaseRate> getRateList() {
+	public List<InstallmentSecuredRate> getRateList() {
 		return rateList;
 	}
-	public void setRateList(List<HirePurchaseRate> rateList) {
+	public void setRateList(List<InstallmentSecuredRate> rateList) {
 		this.rateList = rateList;
 	}
 	public String getIban() {
