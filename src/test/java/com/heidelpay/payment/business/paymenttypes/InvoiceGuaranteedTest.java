@@ -50,7 +50,7 @@ public class InvoiceGuaranteedTest extends AbstractPaymentTest {
 	public void testChargeTypeWithInvoiceId()
 			throws HttpCommunicationException, MalformedURLException, ParseException {
 		InvoiceGuaranteed invoice = getHeidelpay().createPaymentType(getInvoiceGuaranteed());
-		Basket basket = getMinTestBasket();
+		Basket basket = getHeidelpay().createBasket(getMinTestBasket());
 		String invoiceId = getRandomInvoiceId();
 		Charge charge = invoice.charge(basket.getAmountTotalGross(), Currency.getInstance("EUR"),
 				new URL("https://www.meinShop.de"), getMaximumCustomerSameAddress(getRandomId()), basket,

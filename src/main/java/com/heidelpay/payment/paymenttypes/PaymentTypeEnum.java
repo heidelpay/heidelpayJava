@@ -28,7 +28,7 @@ public enum PaymentTypeEnum {
 	INVOICE("ivc"),
     INVOICE_GUARANTEED("ivg"),
 	INVOICE_FACTORING("ivf"),
-	INVOICE_SECURED("ins"),
+	INVOICE_SECURED("ivs"),
 	PAYPAL("ppl"),
 	PREPAYMENT("ppy"),
 	PRZELEWY24("p24"),

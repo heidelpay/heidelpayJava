@@ -95,7 +95,7 @@ public class SepaDirectDebit extends AbstractPaymentType implements PaymentType 
 		return getHeidelpay().charge(amount, currency, this, returnUrl, customer);
 	}
 	public Charge charge(BigDecimal amount, Currency currency, URL returnUrl, Customer customer, Basket basket) throws HttpCommunicationException{
-		return getHeidelpay().charge(amount,currency, basket, returnUrl, customer, basket);
+		return getHeidelpay().charge(amount,currency, this, returnUrl, customer, basket);
 
 	}
 

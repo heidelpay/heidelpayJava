@@ -1,5 +1,21 @@
 package com.heidelpay.payment.business.paymenttypes;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Currency;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang3.time.DateUtils;
+import org.junit.Test;
+
 /*-
  * #%L
  * Heidelpay Java SDK
@@ -26,21 +42,6 @@ import com.heidelpay.payment.Charge;
 import com.heidelpay.payment.Shipment;
 import com.heidelpay.payment.business.AbstractPaymentTest;
 import com.heidelpay.payment.communication.HttpCommunicationException;
-import org.apache.commons.lang3.time.DateUtils;
-import org.junit.Test;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Currency;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class InstallmentSecuredTest extends AbstractPaymentTest {
 
@@ -85,7 +86,7 @@ public class InstallmentSecuredTest extends AbstractPaymentTest {
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
-		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(856.49), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
+		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(370.48), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
 		assertValidAuthorize(ratePlan, authorization);
 	}
 
@@ -108,7 +109,7 @@ public class InstallmentSecuredTest extends AbstractPaymentTest {
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
-		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(856.49), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
+		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(370.48), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
 		assertValidAuthorize(ratePlan, authorization);
 		
 		Charge charge = authorization.charge();
@@ -122,7 +123,7 @@ public class InstallmentSecuredTest extends AbstractPaymentTest {
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
-		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(856.49), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
+		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(370.48), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
 		assertValidAuthorize(ratePlan, authorization);
 		
 		Charge charge = authorization.charge();
@@ -139,7 +140,7 @@ public class InstallmentSecuredTest extends AbstractPaymentTest {
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
-		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(856.49), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
+		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(370.48), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
 		assertValidAuthorize(ratePlan, authorization);
 		
 		Charge charge = authorization.charge();
@@ -151,7 +152,7 @@ public class InstallmentSecuredTest extends AbstractPaymentTest {
 		cancelReq.setAmountVat(BigDecimal.TEN);
 		Cancel cancel = charge.cancel(cancelReq);
 
-		assertValidCancel(cancel, getBigDecimalFourDigits(856.49));
+		assertValidCancel(cancel, getBigDecimalFourDigits(370.48));
 	}
 
 	@Test
@@ -162,7 +163,7 @@ public class InstallmentSecuredTest extends AbstractPaymentTest {
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
-		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(856.49), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
+		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(370.48), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
 		assertValidAuthorize(ratePlan, authorization);
 		
 		Charge charge = authorization.charge();
@@ -180,7 +181,7 @@ public class InstallmentSecuredTest extends AbstractPaymentTest {
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
-		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(856.49), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
+		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(370.48), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
 		assertValidAuthorize(ratePlan, authorization);
 		
 		Charge charge = authorization.charge();
@@ -229,7 +230,7 @@ public class InstallmentSecuredTest extends AbstractPaymentTest {
 	}
 
 	private BigDecimal getAmount() {
-		BigDecimal amount = new BigDecimal(856.4900);
+		BigDecimal amount = new BigDecimal(370.4800);
 		return amount.setScale(2, RoundingMode.HALF_UP);
 	}
 	private InstallmentSecuredRatePlan createInstallmentSecuredType(InstallmentSecuredRatePlan ratePlan) throws ParseException, HttpCommunicationException {
@@ -299,25 +300,9 @@ public class InstallmentSecuredTest extends AbstractPaymentTest {
 		if (!getDate(expected).equals(getDate(actual))) throw new AssertionError("expected: '" + getDate(expected) + "', actual: '" + getDate(actual) + "'");
 
 	}
-
-	private String getDateTime(Date expected) {
-		return new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(expected);
-	}
+	
 	private String getDate(Date expected) {
 		return new SimpleDateFormat("dd.MM.yyyy").format(expected);
-	}
-
-	@Deprecated
-	private void assertRatePlan(BigDecimal effectiveInterestRate, Date orderDate, InstallmentSecuredRatePlan ratePlan) {
-		assertEquals(3, ratePlan.getNumberOfRates());
-		assertEquals(effectiveInterestRate, ratePlan.getEffectiveInterestRate());
-		assertEquals(new BigDecimal("10.0").setScale(4, BigDecimal.ROUND_HALF_UP), ratePlan.getTotalPurchaseAmount());
-		assertEquals(getBigDecimalFourDigits(0.08), ratePlan.getTotalInterestAmount());
-		assertEquals(ratePlan.getTotalAmount().setScale(4, BigDecimal.ROUND_HALF_UP), ratePlan.getTotalInterestAmount().add(ratePlan.getTotalPurchaseAmount()));
-		assertEquals(getBigDecimalFourDigits(3.37), ratePlan.getMonthlyRate());
-		assertEquals(getBigDecimalFourDigits(3.34), ratePlan.getLastRate());
-		assertEquals(getBigDecimalFourDigits(5.40), getBigDecimalFourDigits(ratePlan.getNominalInterestRate().doubleValue()));
-		assertEquals(orderDate, ratePlan.getOrderDate());
 	}
 
 	private void assertInstallmentSecuredRatePlan(BigDecimal effectiveInterestRate, Date orderDate, InstallmentSecuredRatePlan ratePlan) {

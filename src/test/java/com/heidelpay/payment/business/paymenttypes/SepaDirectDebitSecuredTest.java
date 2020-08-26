@@ -1,5 +1,15 @@
 package com.heidelpay.payment.business.paymenttypes;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.ParseException;
+import java.util.Currency;
+
+import org.junit.Test;
+
 /*-
  * #%L
  * Heidelpay Java SDK
@@ -24,15 +34,6 @@ import com.heidelpay.payment.Basket;
 import com.heidelpay.payment.business.AbstractPaymentTest;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.paymenttypes.SepaDirectDebitSecured;
-import org.junit.Test;
-
-import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.ParseException;
-import java.util.Currency;
-
-import static org.junit.Assert.*;
 
 public class SepaDirectDebitSecuredTest extends AbstractPaymentTest {
 
@@ -63,7 +64,7 @@ public class SepaDirectDebitSecuredTest extends AbstractPaymentTest {
 	public void testChargeSepaDirectDebitSecuredType() throws HttpCommunicationException, MalformedURLException, ParseException {
 		SepaDirectDebitSecured sdd = getHeidelpay().createPaymentType(getSepaDirectDebitSecured());
 		assertNotNull(sdd.getId());
-		Basket basket = getMinTestBasket();
+		Basket basket = getHeidelpay().createBasket(getMinTestBasket());
 		sdd.charge(basket.getAmountTotalGross(), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), getMaximumCustomerSameAddress(getRandomId()), basket);
 	}
 	

@@ -87,7 +87,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
-		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(856.49), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
+		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(370.48), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
 		assertValidAuthorize(ratePlan, authorization);
 	}
 
@@ -110,7 +110,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
-		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(856.49), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
+		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(370.48), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
 		assertValidAuthorize(ratePlan, authorization);
 		
 		Charge charge = authorization.charge();
@@ -124,7 +124,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
-		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(856.49), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
+		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(370.48), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
 		assertValidAuthorize(ratePlan, authorization);
 		
 		Charge charge = authorization.charge();
@@ -141,7 +141,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
-		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(856.49), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
+		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(370.48), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
 		assertValidAuthorize(ratePlan, authorization);
 		
 		Charge charge = authorization.charge();
@@ -153,7 +153,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		cancelReq.setAmountVat(BigDecimal.TEN);
 		Cancel cancel = charge.cancel(cancelReq);
 
-		assertValidCancel(cancel, getBigDecimalFourDigits(856.49));
+		assertValidCancel(cancel, getBigDecimalFourDigits(370.48));
 	}
 
 	@Test
@@ -164,7 +164,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
-		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(856.49), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
+		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(370.48), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
 		assertValidAuthorize(ratePlan, authorization);
 		
 		Charge charge = authorization.charge();
@@ -182,7 +182,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		assertNotNull(ratePlanReturned);
 		assertRatePlan(ratePlan, ratePlanReturned);
 		
-		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(856.49), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
+		Authorization authorization = ratePlanReturned.authorize(new BigDecimal(370.48), Currency.getInstance("EUR"), new URL("https://www.heidelpay.com"), createMaximumCustomerSameAddress().getId(), createBasket().getId(), ratePlan.getEffectiveInterestRate());
 		assertValidAuthorize(ratePlan, authorization);
 		
 		Charge charge = authorization.charge();
@@ -231,7 +231,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 	}
 
 	private BigDecimal getAmount() {
-		BigDecimal amount = new BigDecimal(856.4900);
+		BigDecimal amount = new BigDecimal(370.4800);
 		return amount.setScale(2, RoundingMode.HALF_UP);
 	}	
 	private HirePurchaseRatePlan createHirePurchaseType(HirePurchaseRatePlan ratePlan) throws ParseException, HttpCommunicationException {
@@ -301,10 +301,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		if (!getDate(expected).equals(getDate(actual))) throw new AssertionError("expected: '" + getDate(expected) + "', actual: '" + getDate(actual) + "'");
 
 	}
-
-	private String getDateTime(Date expected) {
-		return new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(expected);
-	}
+	
 	private String getDate(Date expected) {
 		return new SimpleDateFormat("dd.MM.yyyy").format(expected);
 	}
