@@ -37,6 +37,7 @@ import com.heidelpay.payment.Heidelpay;
 import com.heidelpay.payment.Metadata;
 import com.heidelpay.payment.Payment;
 import com.heidelpay.payment.PaymentException;
+import com.heidelpay.payment.paymenttypes.PaymentTypeEnum;
 import com.heidelpay.payment.Payout;
 import com.heidelpay.payment.Recurring;
 import com.heidelpay.payment.Shipment;
@@ -45,47 +46,9 @@ import com.heidelpay.payment.business.paymenttypes.InstallmentSecuredRatePlan;
 import com.heidelpay.payment.communication.HeidelpayRestCommunication;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.JsonParser;
-import com.heidelpay.payment.communication.json.JsonApplepayResponse;
-import com.heidelpay.payment.communication.json.JsonAuthorization;
-import com.heidelpay.payment.communication.json.JsonBancontact;
-import com.heidelpay.payment.communication.json.JsonCancel;
-import com.heidelpay.payment.communication.json.JsonCard;
-import com.heidelpay.payment.communication.json.JsonCharge;
-import com.heidelpay.payment.communication.json.JsonCustomer;
-import com.heidelpay.payment.communication.json.JsonHirePurchaseRatePlan;
-import com.heidelpay.payment.communication.json.JsonHirePurchaseRatePlanList;
-import com.heidelpay.payment.communication.json.JsonIdObject;
-import com.heidelpay.payment.communication.json.JsonIdeal;
-import com.heidelpay.payment.communication.json.JsonPayment;
-import com.heidelpay.payment.communication.json.JsonPayout;
-import com.heidelpay.payment.communication.json.JsonPaypal;
-import com.heidelpay.payment.communication.json.JsonPis;
-import com.heidelpay.payment.communication.json.JsonRecurring;
-import com.heidelpay.payment.communication.json.JsonSepaDirectDebit;
-import com.heidelpay.payment.communication.json.JsonShipment;
-import com.heidelpay.payment.communication.json.JsonTransaction;
+import com.heidelpay.payment.communication.json.*;
 import com.heidelpay.payment.communication.mapper.JsonToBusinessClassMapper;
-import com.heidelpay.payment.paymenttypes.AbstractPaymentType;
-import com.heidelpay.payment.paymenttypes.Alipay;
-import com.heidelpay.payment.paymenttypes.Applepay;
-import com.heidelpay.payment.paymenttypes.Bancontact;
-import com.heidelpay.payment.paymenttypes.Card;
-import com.heidelpay.payment.paymenttypes.Eps;
-import com.heidelpay.payment.paymenttypes.Giropay;
-import com.heidelpay.payment.paymenttypes.Ideal;
-import com.heidelpay.payment.paymenttypes.Invoice;
-import com.heidelpay.payment.paymenttypes.InvoiceFactoring;
-import com.heidelpay.payment.paymenttypes.InvoiceGuaranteed;
-import com.heidelpay.payment.paymenttypes.PaymentType;
-import com.heidelpay.payment.paymenttypes.PaymentTypeEnum;
-import com.heidelpay.payment.paymenttypes.Paypal;
-import com.heidelpay.payment.paymenttypes.Pis;
-import com.heidelpay.payment.paymenttypes.Prepayment;
-import com.heidelpay.payment.paymenttypes.Przelewy24;
-import com.heidelpay.payment.paymenttypes.SepaDirectDebit;
-import com.heidelpay.payment.paymenttypes.SepaDirectDebitGuaranteed;
-import com.heidelpay.payment.paymenttypes.Sofort;
-import com.heidelpay.payment.paymenttypes.Wechatpay;
+import com.heidelpay.payment.paymenttypes.*;
 
 public class PaymentService {
 	private static final String TRANSACTION_TYPE_AUTHORIZATION = "authorize";
@@ -104,8 +67,8 @@ public class PaymentService {
 	 * Creates the {@code PaymentService} with the given {@code Heidelpay} facade,
 	 * bound to the given {@code HeidelpayRestCommunication} implementation used for
 	 * http-communication.
-	 * 
-	 * @param heidelpay - the {@code Heidelpay} Facade
+	 *
+	 * @param heidelpay         - the {@code Heidelpay} Facade
 	 * @param restCommunication - the implementation of {@code HeidelpayRestCommunication} to be used for network communication.
 	 */
 	public PaymentService(Heidelpay heidelpay, HeidelpayRestCommunication restCommunication) {
@@ -167,7 +130,7 @@ public class PaymentService {
 		JsonCustomer json = new JsonParser<Customer>().fromJson(response, JsonCustomer.class);
 		return jsonToBusinessClassMapper.mapToBusinessObject(new Customer("", ""), json);
 	}
-	
+
 	public Customer updateCustomer(String id, Customer customer) throws HttpCommunicationException {
 		restCommunication.httpPut(urlUtil.getHttpGetUrl(customer, id), heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(customer));
 		return fetchCustomer(id);
@@ -186,7 +149,7 @@ public class PaymentService {
 		metadata.setId(metadataJson.getId());
 		return metadata;
 	}
-	
+
 	public Metadata fetchMetadata(String id) throws HttpCommunicationException {
 		Metadata metadata = new Metadata();
 		metadata.setId(id);
@@ -344,7 +307,7 @@ public class PaymentService {
 		recurring = jsonToBusinessClassMapper.mapToBusinessObject(recurring, json);
 		recurring.setHeidelpay(heidelpay);
 		return recurring;
-		
+
 	}
 
 
@@ -401,7 +364,7 @@ public class PaymentService {
 	public Cancel fetchCancel(String paymentId, String chargeId, String cancelId) throws HttpCommunicationException {
 		return fetchPayment(paymentId).getCharge(chargeId).getCancel(cancelId);
 	}
-	
+
 
 	private Authorization fetchAuthorization(Payment payment, Authorization authorization, URL url)
 			throws HttpCommunicationException {
@@ -578,6 +541,7 @@ public class PaymentService {
 			case INVOICE:
 			case INVOICE_GUARANTEED:
 			case INVOICE_FACTORING:
+			case INVOICE_SECURED:
 			case PREPAYMENT:
 			case PRZELEWY24:
 			case SOFORT:
@@ -591,8 +555,8 @@ public class PaymentService {
 			case IDEAL:
 				return new JsonIdeal();
 			case SEPA_DIRECT_DEBIT:
-				return new JsonSepaDirectDebit();
 			case SEPA_DIRECT_DEBIT_GUARANTEED:
+			case SEPA_DIRECT_DEBIT_SECURED:
 				return new JsonSepaDirectDebit();
 			case PIS:
 				return new JsonPis();
@@ -600,68 +564,21 @@ public class PaymentService {
 				return new JsonApplepayResponse();
 			case HIRE_PURCHASE_RATE_PLAN:
 				return new JsonHirePurchaseRatePlan();
+			case INSTALLMENT_SECURED_RATE_PLAN:
+				return new JsonInstallmentSecuredRatePlan();
 			case BANCONTACT:
 				return new JsonBancontact();
 			default:
 				throw new PaymentException("Type '" + typeId + "' is currently not supported by the SDK");
 		}
-
 	}
 
 	private AbstractPaymentType getPaymentTypeFromTypeId(String typeId) {
 		if (typeId.length() < 5) {
 			throw new PaymentException("TypeId '" + typeId + "' is invalid");
 		}
-		//Map<Integer, String> a = new HashMap<Integer, String>();
-		//a.put(0,"crd");
-		//a.containsValue()
 		String paymentType = getTypeIdentifier(typeId);
-		// TODO: Replace if-else workflow with a for-loop, checking if paymentType contains in a key-value-map
-		// TODO: return an int to handle a switch-case
-		if ("crd".equalsIgnoreCase(paymentType)) {
-			return new Card("", "");
-		} else if ("eps".equalsIgnoreCase(paymentType)) {
-			return new Eps();
-		} else if ("gro".equalsIgnoreCase(paymentType)) {
-			return new Giropay();
-		} else if ("idl".equalsIgnoreCase(paymentType)) {
-			return new Ideal();
-		} else if ("ivc".equalsIgnoreCase(paymentType)) {
-			return new Invoice();
-		} else if ("ivg".equalsIgnoreCase(paymentType)) {
-			return new InvoiceGuaranteed();
-		} else if ("ivf".equalsIgnoreCase(paymentType)) {
-			return new InvoiceFactoring();
-		} else if ("ivs".equalsIgnoreCase(paymentType)) {
-			return new InvoiceSecured();
-		} else if ("ppl".equalsIgnoreCase(paymentType)) {
-			return new Paypal();
-		} else if ("ppy".equalsIgnoreCase(paymentType)) {
-			return new Prepayment();
-		} else if ("p24".equalsIgnoreCase(paymentType)) {
-			return new Przelewy24();
-		} else if ("sdd".equalsIgnoreCase(paymentType)) {
-			return new SepaDirectDebit("");
-		} else if ("ddg".equalsIgnoreCase(paymentType)) {
-			return new SepaDirectDebitGuaranteed("");
-		} else if ("dds".equalsIgnoreCase(paymentType)) {
-			return new SepaDirectDebitSecured("");
-		} else if ("sft".equalsIgnoreCase(paymentType)) {
-			return new Sofort();
-		} else if ("pis".equalsIgnoreCase(paymentType)) {
-			return new Pis();
-		} else if ("ali".equalsIgnoreCase(paymentType)) {
-			return new Alipay();
-		} else if ("wcp".equalsIgnoreCase(paymentType)) {
-			return new Wechatpay();
-		} else if ("apl".equalsIgnoreCase(paymentType)) {
-			return new Applepay();
-		} else if ("hdd".equalsIgnoreCase(paymentType)) {
-			return new HirePurchaseRatePlan();
-		}else if ("ins".equalsIgnoreCase(paymentType)) {
-			return new InstallmentSecuredRatePlan();
-		} else {
-			throw new PaymentException("Type '" + typeId + "' is currently not supported by the SDK");
+
 		PaymentTypeEnum paymentTypeEnum = PaymentTypeEnum.getPaymentTypeEnumByShortName(paymentType);
 		switch (paymentTypeEnum) {
 			case CARD:
@@ -678,6 +595,8 @@ public class PaymentService {
 				return new InvoiceGuaranteed();
 			case INVOICE_FACTORING:
 				return new InvoiceFactoring();
+			case INVOICE_SECURED:
+				return new InvoiceSecured();
 			case PAYPAL:
 				return new Paypal();
 			case PREPAYMENT:
@@ -688,6 +607,8 @@ public class PaymentService {
 				return new SepaDirectDebit("");
 			case SEPA_DIRECT_DEBIT_GUARANTEED:
 				return new SepaDirectDebitGuaranteed("");
+			case SEPA_DIRECT_DEBIT_SECURED:
+				return new SepaDirectDebitSecured("");
 			case SOFORT:
 				return new Sofort();
 			case PIS:
@@ -700,17 +621,15 @@ public class PaymentService {
 				return new Applepay();
 			case HIRE_PURCHASE_RATE_PLAN:
 				return new HirePurchaseRatePlan();
+			case INSTALLMENT_SECURED_RATE_PLAN:
+				return new InstallmentSecuredRatePlan();
 			case BANCONTACT:
 				return new Bancontact("");
 			default:
 				throw new PaymentException("Type '" + typeId + "' is currently not supported by the SDK");
 		}
 	}
-
-	private String getTypeIdentifier(String typeId) {
+	private String getTypeIdentifier (String typeId){
 		return typeId.substring(2, 5);
 	}
-
-
-
 }
