@@ -106,18 +106,6 @@ public class Payment extends AbstractPayment {
 	public Charge charge(BigDecimal amount, Currency currency, PaymentType paymentType, URL returnUrl, Customer customer) throws HttpCommunicationException {
 		return getHeidelpay().charge(amount, currency, paymentType, returnUrl, customer);
 	}
-	
-	public Authorization authorize(BigDecimal amount, Currency currency, String typeId, String customerId) throws HttpCommunicationException {
-		return getHeidelpay().authorize(amount, currency, typeId, customerId);
-	}
-
-	public Authorization authorize(BigDecimal amount, Currency currency, String typeId) throws HttpCommunicationException {
-		return getHeidelpay().authorize(amount, currency, typeId);
-	}
-
-	public Authorization authorize(BigDecimal amount, Currency currency, PaymentType paymentType) throws HttpCommunicationException {
-		return getHeidelpay().authorize(amount, currency, paymentType);
-	}
 
 	public Authorization authorize(BigDecimal amount, Currency currency, String typeId, URL returnUrl) throws HttpCommunicationException {
 		return getHeidelpay().authorize(amount, currency, typeId, returnUrl);
