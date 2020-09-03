@@ -46,6 +46,9 @@ public class PropertiesUtil {
 			Properties loadedProperties = new Properties();
 			loadedProperties.load(this.getClass().getResourceAsStream("/heidelpay.properties"));
 			this.properties = loadedProperties;
+
+			loadedProperties.load(this.getClass().getResourceAsStream("/test-keys.properties"));
+			this.properties.putAll(loadedProperties);
 		} catch (IOException e) {
 			logger.error("Error loading heidelpay.properties from Classpath: %s", e.getMessage());
 			throw new PropertiesException("Error loading heidelpay.properties from Classpath: " + e.getMessage());
