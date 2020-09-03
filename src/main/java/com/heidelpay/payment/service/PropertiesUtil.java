@@ -23,9 +23,10 @@ package com.heidelpay.payment.service;
 import java.io.IOException;
 import java.util.Properties;
 
-import com.heidelpay.payment.exceptions.PropertiesException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.heidelpay.payment.exceptions.PropertiesException;
 
 public class PropertiesUtil {
 	public static final Logger logger = LogManager.getLogger(PropertiesUtil.class);
@@ -36,6 +37,7 @@ public class PropertiesUtil {
 	public static final String PRIVATE_KEY1 = "privatekey1";
 	public static final String PRIVATE_KEY2 = "privatekey2";
 	public static final String PRIVATE_KEY3 = "privatekey3";
+	public static final String MARKETPLACE_PRIVATE_KEY="marketplacePrivateKey";
 
 	private Properties properties;
 	
@@ -44,11 +46,8 @@ public class PropertiesUtil {
 			Properties loadedProperties = new Properties();
 			loadedProperties.load(this.getClass().getResourceAsStream("/heidelpay.properties"));
 			this.properties = loadedProperties;
-
-			loadedProperties.load(this.getClass().getResourceAsStream("/test-keys.properties"));
-			this.properties.putAll(loadedProperties);
 		} catch (IOException e) {
-			logger.error("Error loading heidelpay.properties from Classpath: " + e.getMessage(), e);
+			logger.error("Error loading heidelpay.properties from Classpath: %s", e.getMessage());
 			throw new PropertiesException("Error loading heidelpay.properties from Classpath: " + e.getMessage());
 		}
 	}

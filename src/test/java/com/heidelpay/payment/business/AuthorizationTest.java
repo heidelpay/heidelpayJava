@@ -21,6 +21,7 @@ package com.heidelpay.payment.business;
  */
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -31,8 +32,11 @@ import java.util.Currency;
 
 import org.junit.Test;
 
+import com.heidelpay.payment.AbstractInitPayment;
 import com.heidelpay.payment.Authorization;
+import com.heidelpay.payment.Basket;
 import com.heidelpay.payment.Customer;
+import com.heidelpay.payment.MarketplaceAuthorization;
 import com.heidelpay.payment.Payment;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.paymenttypes.Card;
@@ -214,4 +218,45 @@ public class AuthorizationTest extends AbstractPaymentTest {
 		assertEquals(new BigDecimal(1.0000).setScale(4), authorize.getAmount());
 	}
 
+	@Test
+	public void testMarketplaceAuthorize() throws MalformedURLException, HttpCommunicationException {
+		String participantId_1 = "31HA07BC814FC247577B195E59A99FC6";
+		String participantId_2 = "31HA07BC814FC247577B309FF031D3F0";
+		
+		//create basket
+		Basket maxBasket = getMaxTestBasket();
+		maxBasket.setAmountTotalDiscount(null);
+		
+		maxBasket.getBasketItems().get(0).setParticipantId(participantId_1);
+		maxBasket.getBasketItems().get(1).setParticipantId(participantId_2);
+		
+		int basketItemCnt = maxBasket.getBasketItems().size();
+		for(int i=0; i<basketItemCnt; i++) {
+			maxBasket.getBasketItems().get(i).setAmountDiscount(null);
+		}
+
+		Basket basket = getHeidelpay(marketplacePrivateKey).createBasket(maxBasket);	
+		
+		//create card
+		Card card = getPaymentTypeCard("4012888888881881");
+		card = (Card)getHeidelpay(marketplacePrivateKey).createPaymentType(card);
+		
+		//marketplace authorization
+		MarketplaceAuthorization authorizeRequest = getMarketplaceAuthorization(card.getId(), null, null, null, basket.getId(), null);
+		authorizeRequest.setAmount(maxBasket.getAmountTotalGross());
+		
+		Authorization authorize = getHeidelpay(marketplacePrivateKey).authorize(authorizeRequest);
+		assertNotNull(authorize.getId());
+		assertNotNull(authorize);
+		assertEquals(AbstractInitPayment.Status.PENDING, authorize.getStatus());
+		assertEquals(participantId_2, authorize.getProcessing().getParticipantId());
+		
+		//get marketplace payment
+		Payment payment = getHeidelpay(marketplacePrivateKey).fetchMarketplacePayment(authorize.getPayment().getId());
+		assertNotNull(payment);
+		assertNotNull(payment.getId());
+		assertNotNull(payment.getAuthorizationsList());
+		assertEquals(1, payment.getAuthorizationsList().size());
+		assertEquals(AbstractInitPayment.Status.PENDING, authorize.getStatus());
+	}
 }

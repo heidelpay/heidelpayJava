@@ -44,6 +44,7 @@ import com.heidelpay.payment.Customer;
 import com.heidelpay.payment.Customer.Salutation;
 import com.heidelpay.payment.CustomerCompanyData;
 import com.heidelpay.payment.Heidelpay;
+import com.heidelpay.payment.MarketplaceAuthorization;
 import com.heidelpay.payment.Metadata;
 import com.heidelpay.payment.PaymentException;
 import com.heidelpay.payment.Processing;
@@ -63,6 +64,7 @@ public abstract class AbstractPaymentTest {
 	public final String privateKey1 = properties.getString(PropertiesUtil.PRIVATE_KEY1);
 	public final String privateKey2 = properties.getString(PropertiesUtil.PRIVATE_KEY2);
 	public final String privateKey3 = properties.getString(PropertiesUtil.PRIVATE_KEY3);
+	public final String marketplacePrivateKey = properties.getString(PropertiesUtil.MARKETPLACE_PRIVATE_KEY);
 
 	protected String getRandomInvoiceId() {
 		return getRandomId().substring(0, 5);
@@ -120,6 +122,21 @@ public abstract class AbstractPaymentTest {
 		.setMetadataId(metadataId)
 		.setBasketId(basketId)
 		.setCard3ds(card3ds);
+		return authorization;
+	}
+	
+	protected MarketplaceAuthorization getMarketplaceAuthorization(String typeId, String customerId, String orderId, String metadataId, String basketId, Boolean card3ds) throws MalformedURLException {
+		MarketplaceAuthorization authorization = new MarketplaceAuthorization();
+		authorization
+			.setAmount(new BigDecimal(10))
+			.setCurrency(Currency.getInstance("EUR"))
+			.setTypeId(typeId)
+			.setReturnUrl(new URL("https://www.heidelpay.com"))
+			.setOrderId(orderId)
+			.setCustomerId(customerId)
+			.setMetadataId(metadataId)
+			.setBasketId(basketId)
+			.setCard3ds(card3ds);
 		return authorization;
 	}
 	

@@ -451,6 +451,10 @@ public class JsonToBusinessClassMapper {
 		processing.setPdfLink(json.getPdfLink());
 		processing.setExternalOrderId(json.getExternalOrderId());
 		processing.setZgReferenceId(json.getZgReferenceId());
+		processing.setCreatorId(json.getCreatorId());
+		processing.setIdentification(json.getIdentification());
+		processing.setTraceId(json.getTraceId());
+		processing.setParticipantId(json.getParticipantId());
 		return processing;
 	}
 
