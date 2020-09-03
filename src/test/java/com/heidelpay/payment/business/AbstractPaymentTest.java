@@ -546,7 +546,6 @@ public abstract class AbstractPaymentTest {
 		basketItem.setVat(20);
 		basketItem.setSubTitle("Nicht nur Pros brauchen Power.");
 		basketItem.setType("goods");
-		basketItem.setType("goods");
 		try {
 			basketItem.setImageUrl(new URL("https://www.apple.com/de/ipad-air/images/overview/hero__gmn7i7gbziqa_large_2x.jpg"));
 		} catch (MalformedURLException e) {
