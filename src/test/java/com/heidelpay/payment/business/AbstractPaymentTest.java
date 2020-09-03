@@ -22,6 +22,18 @@ package com.heidelpay.payment.business;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Currency;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+
 import com.heidelpay.payment.Address;
 import com.heidelpay.payment.Authorization;
 import com.heidelpay.payment.Basket;
@@ -42,18 +54,6 @@ import com.heidelpay.payment.paymenttypes.InvoiceGuaranteed;
 import com.heidelpay.payment.paymenttypes.InvoiceSecured;
 import com.heidelpay.payment.paymenttypes.SepaDirectDebit;
 import com.heidelpay.payment.service.PropertiesUtil;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Currency;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
 
 public abstract class AbstractPaymentTest {
 
@@ -545,6 +545,7 @@ public abstract class AbstractPaymentTest {
 		basketItem.setUnit("Pc.");
 		basketItem.setVat(20);
 		basketItem.setSubTitle("Nicht nur Pros brauchen Power.");
+		basketItem.setType("goods");
 		basketItem.setType("goods");
 		try {
 			basketItem.setImageUrl(new URL("https://www.apple.com/de/ipad-air/images/overview/hero__gmn7i7gbziqa_large_2x.jpg"));

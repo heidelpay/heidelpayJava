@@ -148,8 +148,8 @@ public class Heidelpay {
 	 * @param customerId Customer id to be deleted
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
-	public void deleteCustomer(String customerId) throws HttpCommunicationException {
-		paymentService.deleteCustomer(customerId);
+	public String deleteCustomer(String customerId) throws HttpCommunicationException {
+		return paymentService.deleteCustomer(customerId);
 	}
 	
 	public Metadata createMetadata(Metadata metadata) throws HttpCommunicationException {
@@ -202,57 +202,25 @@ public class Heidelpay {
 	}
 	
 	/**
-	 * Authorize call with customerId and typeId. This is used if the type is
-	 * created using the Javascript SDK or the Mobile SDK
-	 * 
-	 * @param amount Amount usd for the authorization
-	 * @param currency Currency used for the authorization
-	 * @param typeId Payment type id used for the authorization
-	 * @param customerId Customer id used for the authorization
-	 * @return Authorization with paymentId and authorize id
-	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
-	 */
-	public Authorization authorize(BigDecimal amount, Currency currency, String typeId, String customerId)
-			throws HttpCommunicationException {
-		return authorize(amount, currency, typeId, null, customerId);
-	}
-
-	/**
-	 * Authorize call. This is used if the type is created using the Javascript SDK
-	 * or the Mobile SDK
-	 * 
-	 * @param amount Amount usd for the authorization
-	 * @param currency Currency used for the authorization
-	 * @param typeId Payment type id used for the authorization
-	 * @return Authorization with paymentId and authorize id
-	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
-	 */
-	public Authorization authorize(BigDecimal amount, Currency currency, String typeId)
-			throws HttpCommunicationException {
-		return authorize(amount, currency, typeId, null, "");
-	}
-
-	/**
-	 * Authorize call for redirect payments with a returnUrl. This is used if the
-	 * type is created using the Javascript SDK or the Mobile SDK
-	 * 
-	 * @param amount Amount usd for the authorization
+	 * Authorize call for redirect payments with a returnUrl and existed payment type.
+	 *
+	 * @param amount Amount used for the authorization
 	 * @param currency Currency used for the authorization
 	 * @param typeId Payment type id used for the authorization
 	 * @param returnUrl ReturnURL where after the payment was finished
+	 * @param card3ds Flag to specify whether to force 3ds or not
 	 * @return Authorization with paymentId and authorize id
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
 	public Authorization authorize(BigDecimal amount, Currency currency, String typeId, URL returnUrl)
 			throws HttpCommunicationException {
-		return authorize(amount, currency, typeId, returnUrl, (String) null);
+		return authorize(amount, currency, typeId, returnUrl, null, null);
 	}
 
 	/**
-	 * Authorize call for redirect payments with a returnUrl. This is used if the
-	 * type is created using the Javascript SDK or the Mobile SDK
+	 * Authorize call for redirect payments with a returnUrl and existed payment type.
 	 *
-	 * @param amount Amount usd for the authorization
+	 * @param amount Amount used for the authorization
 	 * @param currency Currency used for the authorization
 	 * @param typeId Payment type id used for the authorization
 	 * @param returnUrl ReturnURL where after the payment was finished
@@ -264,12 +232,12 @@ public class Heidelpay {
 			throws HttpCommunicationException {
 		return authorize(amount, currency, typeId, returnUrl, null, card3ds);
 	}
+	
 	/**
-	 * Authorize call for redirect payments with returnUrl and a customer. This is
-	 * used if the type is created using the Javascript SDK or the Mobile SDK. The
-	 * customer can already exist. If the customer does not exist it will be created
+	 * Authorize call for redirect payments with returnUrl and existed payment type.
+	 * The customer must not exist. The customer will be created before executing auhtorization.
 	 *
-	 * @param amount Amount usd for the authorization
+	 * @param amount Amount used for the authorization
 	 * @param currency Currency used for the authorization
 	 * @param typeId Payment type id used for the authorization
 	 * @param returnUrl ReturnURL where after the payment was finished
@@ -277,31 +245,14 @@ public class Heidelpay {
 	 * @return Authorization with paymentId and authorize id
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
-	public Authorization authorize(BigDecimal amount, Currency currency, String typeId, URL returnUrl,
-			Customer customer) throws HttpCommunicationException {
-		return authorize(amount, currency, typeId, returnUrl, getCustomerId(createCustomerIfPresent(customer)));
+	public Authorization authorize(BigDecimal amount, Currency currency, String typeId, URL returnUrl, Customer customer) throws HttpCommunicationException {
+		return authorize(amount, currency, typeId, returnUrl, getCustomerId(createCustomerIfPresent(customer)), null);
 	}
 
 	/**
-	 * Authorize call. Creates a new paymentType
+	 * Authorize call for redirect payments with returnUrl. New payment type will be created before executing authorization.
 	 *
-	 * @param amount Amount usd for the authorization
-	 * @param currency Currency used for the authorization
-	 * @param paymentType Payment type used for the authorization
-	 * @return Authorization with paymentId and authorize id
-	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
-	 */
-	public Authorization authorize(BigDecimal amount, Currency currency, PaymentType paymentType)
-			throws HttpCommunicationException {
-		return authorize(amount, currency, paymentType, null);
-	}
-
-	/**
-	 * Authorize call for redirect payments with returnUrl. Creates a new
-	 * paymentType
-	 *
-	 *
-	 * @param amount Amount usd for the authorization
+	 * @param amount Amount used for the authorization
 	 * @param currency Currency used for the authorization
 	 * @param paymentType Payment type used for the authorization
 	 * @param returnUrl ReturnURL where after the payment was finished
@@ -314,11 +265,11 @@ public class Heidelpay {
 	}
 
 	/**
-	 * Authorize call for redirect payments with returnUrl. Creates a new
-	 * paymentType
+	 * Authorize call for redirect payments with returnUrl in 3ds or non-3ds. New payment type will be created before executing authorization.
+	 * <br>
+	 * <b>Note:</b> Keypair must have either 3ds channel (card3ds=true) or non-3ds channel (card3ds=false) or both
 	 *
-	 *
-	 * @param amount Amount usd for the authorization
+	 * @param amount Amount used for the authorization
 	 * @param currency Currency used for the authorization
 	 * @param paymentType Payment type used for the authorization
 	 * @param returnUrl ReturnURL where after the payment was finished
@@ -332,9 +283,8 @@ public class Heidelpay {
 	}
 
 	/**
-	 * Authorize call for redirect payments with returnUrl and a customer. Creates a
-	 * new paymentType The customer can already exist. If the customer does not
-	 * exist it will be created
+	 * Authorize call for redirect payments with returnUrl.
+	 * New paymentType and new customer will be created before executing authorization.
 	 *
 	 *
 	 * @param amount Amount used for the authorization
@@ -345,18 +295,17 @@ public class Heidelpay {
 	 * @return Authorization with paymentId and authorize id
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
-	public Authorization authorize(BigDecimal amount, Currency currency, PaymentType paymentType, URL returnUrl,
-			Customer customer) throws HttpCommunicationException {
-		return authorize(amount, currency, createPaymentType(paymentType).getId(), returnUrl,
-				getCustomerId(createCustomerIfPresent(customer)));
+	public Authorization authorize(BigDecimal amount, Currency currency, PaymentType paymentType, URL returnUrl, Customer customer) throws HttpCommunicationException {
+		return authorize(amount, currency, createPaymentType(paymentType).getId(), returnUrl, getCustomerId(createCustomerIfPresent(customer)), null);
 	}
 
 	/**
-	 * Authorize call for redirect payments with returnUrl and a customer. Creates a
-	 * new paymentType The customer can already exist. If the customer does not
-	 * exist it will be created
-	 *
-	 * @param amount Amount usd for the authorization
+	 * Authorize call for redirect payments with returnUrl in 3ds or non-3ds.
+	 * New paymentType and new customer will be created before executing authorization.
+	 ** <br>
+	 * <b>Note:</b> Keypair must have either 3ds channel (card3ds=true) or non-3ds channel (card3ds=false) or both
+	 * 
+	 * @param amount Amount used for the authorization
 	 * @param currency Currency used for the authorization
 	 * @param paymentType Payment type used for the authorization
 	 * @param returnUrl ReturnURL where after the payment was finished
@@ -367,15 +316,13 @@ public class Heidelpay {
 	 */
 	public Authorization authorize(BigDecimal amount, Currency currency, PaymentType paymentType, URL returnUrl,
 			Customer customer, Boolean card3ds) throws HttpCommunicationException {
-		return authorize(amount, currency, createPaymentType(paymentType).getId(), returnUrl,
-				getCustomerId(createCustomerIfPresent(customer)), card3ds);
+		return authorize(amount, currency, createPaymentType(paymentType).getId(), returnUrl, getCustomerId(createCustomerIfPresent(customer)), card3ds);
 	}
-
+	
 	/**
-	 * Authorize call for redirect payments with returnUrl and a customerId. The
-	 * customer must exist.
+	 * Authorize call for redirect payments with returnUrl, existed payment type and existed customer.
 	 *
-	 * @param amount Amount usd for the authorization
+	 * @param amount Amount used for the authorization
 	 * @param currency Currency used for the authorization
 	 * @param typeId Payment type id used for the authorization
 	 * @param returnUrl ReturnURL where after the payment was finished
@@ -383,16 +330,16 @@ public class Heidelpay {
 	 * @return Authorization with paymentId and authorize id
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
-	public Authorization authorize(BigDecimal amount, Currency currency, String typeId, URL returnUrl,
-			String customerId) throws HttpCommunicationException {
-		return authorize(getAuthorization(amount, currency, typeId, returnUrl, customerId, null));
+	public Authorization authorize(BigDecimal amount, Currency currency, String typeId, URL returnUrl, String customerId) throws HttpCommunicationException {
+		return authorize(amount, currency, typeId, returnUrl, customerId, null);
 	}
 
 	/**
-	 * Authorize call for redirect payments with returnUrl and a customerId. The
-	 * customer must exist.
+	 * Authorize call for redirect payments with returnUrl, existed payment type and existed customer.
+	 * <br>
+	 * <b>Note:</b> Keypair must have either 3ds channel (card3ds=true) or non-3ds channel (card3ds=false) or both
 	 *
-	 * @param amount Amount usd for the authorization
+	 * @param amount Amount used for the authorization
 	 * @param currency Currency used for the authorization
 	 * @param typeId Payment type id used for the authorization
 	 * @param returnUrl ReturnURL where after the payment was finished
@@ -401,8 +348,7 @@ public class Heidelpay {
 	 * @return Authorization with paymentId and authorize id
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
-	public Authorization authorize(BigDecimal amount, Currency currency, String typeId, URL returnUrl,
-			String customerId, Boolean card3ds) throws HttpCommunicationException {
+	public Authorization authorize(BigDecimal amount, Currency currency, String typeId, URL returnUrl, String customerId, Boolean card3ds) throws HttpCommunicationException {
 		return authorize(getAuthorization(amount, currency, typeId, returnUrl, customerId, card3ds));
 	}
 
@@ -999,8 +945,7 @@ public class Heidelpay {
 		return customer.getId();
 	}
 
-	private Authorization getAuthorization(BigDecimal amount, Currency currency, String paymentTypeId, URL returnUrl,
-			String customerId, Boolean card3ds) {
+	private Authorization getAuthorization(BigDecimal amount, Currency currency, String paymentTypeId, URL returnUrl, String customerId, Boolean card3ds) {
 		Authorization authorization = new Authorization(this);
 		authorization
 		.setAmount(amount)

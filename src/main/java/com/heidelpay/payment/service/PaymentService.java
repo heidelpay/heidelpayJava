@@ -37,7 +37,6 @@ import com.heidelpay.payment.Heidelpay;
 import com.heidelpay.payment.Metadata;
 import com.heidelpay.payment.Payment;
 import com.heidelpay.payment.PaymentException;
-import com.heidelpay.payment.paymenttypes.PaymentTypeEnum;
 import com.heidelpay.payment.Payout;
 import com.heidelpay.payment.Recurring;
 import com.heidelpay.payment.Shipment;
@@ -46,9 +45,51 @@ import com.heidelpay.payment.business.paymenttypes.InstallmentSecuredRatePlan;
 import com.heidelpay.payment.communication.HeidelpayRestCommunication;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.JsonParser;
-import com.heidelpay.payment.communication.json.*;
+import com.heidelpay.payment.communication.json.JsonApplepayResponse;
+import com.heidelpay.payment.communication.json.JsonAuthorization;
+import com.heidelpay.payment.communication.json.JsonBancontact;
+import com.heidelpay.payment.communication.json.JsonCancel;
+import com.heidelpay.payment.communication.json.JsonCard;
+import com.heidelpay.payment.communication.json.JsonCharge;
+import com.heidelpay.payment.communication.json.JsonCustomer;
+import com.heidelpay.payment.communication.json.JsonHirePurchaseRatePlan;
+import com.heidelpay.payment.communication.json.JsonHirePurchaseRatePlanList;
+import com.heidelpay.payment.communication.json.JsonIdObject;
+import com.heidelpay.payment.communication.json.JsonIdeal;
+import com.heidelpay.payment.communication.json.JsonInstallmentSecuredRatePlan;
+import com.heidelpay.payment.communication.json.JsonInstallmentSecuredRatePlanList;
+import com.heidelpay.payment.communication.json.JsonPayment;
+import com.heidelpay.payment.communication.json.JsonPayout;
+import com.heidelpay.payment.communication.json.JsonPaypal;
+import com.heidelpay.payment.communication.json.JsonPis;
+import com.heidelpay.payment.communication.json.JsonRecurring;
+import com.heidelpay.payment.communication.json.JsonSepaDirectDebit;
+import com.heidelpay.payment.communication.json.JsonShipment;
+import com.heidelpay.payment.communication.json.JsonTransaction;
 import com.heidelpay.payment.communication.mapper.JsonToBusinessClassMapper;
-import com.heidelpay.payment.paymenttypes.*;
+import com.heidelpay.payment.paymenttypes.AbstractPaymentType;
+import com.heidelpay.payment.paymenttypes.Alipay;
+import com.heidelpay.payment.paymenttypes.Applepay;
+import com.heidelpay.payment.paymenttypes.Bancontact;
+import com.heidelpay.payment.paymenttypes.Card;
+import com.heidelpay.payment.paymenttypes.Eps;
+import com.heidelpay.payment.paymenttypes.Giropay;
+import com.heidelpay.payment.paymenttypes.Ideal;
+import com.heidelpay.payment.paymenttypes.Invoice;
+import com.heidelpay.payment.paymenttypes.InvoiceFactoring;
+import com.heidelpay.payment.paymenttypes.InvoiceGuaranteed;
+import com.heidelpay.payment.paymenttypes.InvoiceSecured;
+import com.heidelpay.payment.paymenttypes.PaymentType;
+import com.heidelpay.payment.paymenttypes.PaymentTypeEnum;
+import com.heidelpay.payment.paymenttypes.Paypal;
+import com.heidelpay.payment.paymenttypes.Pis;
+import com.heidelpay.payment.paymenttypes.Prepayment;
+import com.heidelpay.payment.paymenttypes.Przelewy24;
+import com.heidelpay.payment.paymenttypes.SepaDirectDebit;
+import com.heidelpay.payment.paymenttypes.SepaDirectDebitGuaranteed;
+import com.heidelpay.payment.paymenttypes.SepaDirectDebitSecured;
+import com.heidelpay.payment.paymenttypes.Sofort;
+import com.heidelpay.payment.paymenttypes.Wechatpay;
 
 public class PaymentService {
 	private static final String TRANSACTION_TYPE_AUTHORIZATION = "authorize";
@@ -326,12 +367,14 @@ public class PaymentService {
 		return payment;
 	}
 
-	public void deleteCustomer(String customerId) throws HttpCommunicationException {
+	public String deleteCustomer(String customerId) throws HttpCommunicationException {
 		String response = restCommunication.httpDelete(urlUtil.getHttpGetUrl(new Customer("a", "b"), customerId),
 				heidelpay.getPrivateKey());
-		if (!"true".equalsIgnoreCase(response)) {
+		if (response == null || response.isEmpty()) {
 			throw new PaymentException("Customer '" + customerId + "' cannot be deleted");
 		}
+		JsonIdObject idResponse = new JsonParser<JsonIdObject>().fromJson(response, JsonIdObject.class);
+		return idResponse.getId();
 	}
 
 	@SuppressWarnings("unchecked")
