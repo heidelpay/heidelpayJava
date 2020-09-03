@@ -46,7 +46,7 @@
 		<privatekey1>${privatekey1}</privatekey1>
 		<privatekey2>${privatekey2}</privatekey2>
 		<privatekey3>${privatekey3}</privatekey3>
-		<marketplacePrivateKey>${marketplacePrivateKey}</marketplacePrivateKey>
+		<privatekey4>${privatekey4}</privatekey4>
 		
 	</properties>
 
