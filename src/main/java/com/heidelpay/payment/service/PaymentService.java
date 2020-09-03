@@ -547,6 +547,8 @@ public class PaymentService {
 			case SOFORT:
 			case ALIPAY:
 			case WECHATPAY:
+			case PF_CARD:
+			case PF_EFINANCE:
 				return new JsonIdObject();
 			case PAYPAL:
 				return new JsonPaypal();
@@ -625,6 +627,10 @@ public class PaymentService {
 				return new InstallmentSecuredRatePlan();
 			case BANCONTACT:
 				return new Bancontact("");
+			case PF_CARD:
+				return new PostFinanceCard();
+			case PF_EFINANCE:
+				return new PostFinanceEFinance();
 			default:
 				throw new PaymentException("Type '" + typeId + "' is currently not supported by the SDK");
 		}
