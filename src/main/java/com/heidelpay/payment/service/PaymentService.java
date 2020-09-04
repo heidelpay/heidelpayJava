@@ -86,6 +86,8 @@ import com.heidelpay.payment.paymenttypes.PaymentType;
 import com.heidelpay.payment.paymenttypes.PaymentTypeEnum;
 import com.heidelpay.payment.paymenttypes.Paypal;
 import com.heidelpay.payment.paymenttypes.Pis;
+import com.heidelpay.payment.paymenttypes.PostFinanceCard;
+import com.heidelpay.payment.paymenttypes.PostFinanceEFinance;
 import com.heidelpay.payment.paymenttypes.Prepayment;
 import com.heidelpay.payment.paymenttypes.Przelewy24;
 import com.heidelpay.payment.paymenttypes.SepaDirectDebit;
