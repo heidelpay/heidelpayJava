@@ -64,7 +64,7 @@ public abstract class AbstractPaymentTest {
 	public final String privateKey1 = properties.getString(PropertiesUtil.PRIVATE_KEY1);
 	public final String privateKey2 = properties.getString(PropertiesUtil.PRIVATE_KEY2);
 	public final String privateKey3 = properties.getString(PropertiesUtil.PRIVATE_KEY3);
-	public final String privatekey4 = properties.getString(PropertiesUtil.PRIVATE_KEY4);
+	public final String marketplacePrivatekey = properties.getString(PropertiesUtil.MARKETPLACE_PRIVATE_KEY);
 
 	protected String getRandomInvoiceId() {
 		return getRandomId().substring(0, 5);

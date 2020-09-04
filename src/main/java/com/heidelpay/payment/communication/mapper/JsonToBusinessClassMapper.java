@@ -458,7 +458,7 @@ public class JsonToBusinessClassMapper {
 		return processing;
 	}
 
-	public Payment mapToBusinessObject(Payment payment, JsonPayment json) {
+	public <T extends Payment> T mapToBusinessObject(T payment, JsonPayment json) {
 		payment.setAmountTotal(json.getAmount().getTotal());
 		payment.setAmountCanceled(json.getAmount().getCanceled());
 		payment.setAmountCharged(json.getAmount().getCharged());

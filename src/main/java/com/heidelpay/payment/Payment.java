@@ -67,7 +67,6 @@ public class Payment extends AbstractPayment {
 	private Basket basket;
 	
 	private Authorization authorization;
-	private List<Authorization> authorizationsList;
 	private List<Charge> chargesList;
 	private List<Cancel> cancelList;
 	private List<Payout> payoutList;
@@ -365,13 +364,5 @@ public class Payment extends AbstractPayment {
 
 	public void setPayoutList(List<Payout> payoutList) {
 		this.payoutList = payoutList;
-	}
-
-	public List<Authorization> getAuthorizationsList() {
-		return authorizationsList;
-	}
-
-	public void setAuthorizationsList(List<Authorization> authorizationsList) {
-		this.authorizationsList = authorizationsList;
 	}
 }

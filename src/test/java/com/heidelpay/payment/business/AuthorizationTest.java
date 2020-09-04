@@ -37,6 +37,7 @@ import com.heidelpay.payment.Authorization;
 import com.heidelpay.payment.Basket;
 import com.heidelpay.payment.Customer;
 import com.heidelpay.payment.MarketplaceAuthorization;
+import com.heidelpay.payment.MarketplacePayment;
 import com.heidelpay.payment.Payment;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.paymenttypes.Card;
@@ -235,24 +236,24 @@ public class AuthorizationTest extends AbstractPaymentTest {
 			maxBasket.getBasketItems().get(i).setAmountDiscount(null);
 		}
 
-		Basket basket = getHeidelpay(privatekey4).createBasket(maxBasket);	
+		Basket basket = getHeidelpay(marketplacePrivatekey).createBasket(maxBasket);	
 		
 		//create card
 		Card card = getPaymentTypeCard("4012888888881881");
-		card = (Card)getHeidelpay(privatekey4).createPaymentType(card);
+		card = (Card)getHeidelpay(marketplacePrivatekey).createPaymentType(card);
 		
 		//marketplace authorization
 		MarketplaceAuthorization authorizeRequest = getMarketplaceAuthorization(card.getId(), null, null, null, basket.getId(), null);
 		authorizeRequest.setAmount(maxBasket.getAmountTotalGross());
 		
-		Authorization authorize = getHeidelpay(privatekey4).authorize(authorizeRequest);
+		Authorization authorize = getHeidelpay(marketplacePrivatekey).authorize(authorizeRequest);
 		assertNotNull(authorize.getId());
 		assertNotNull(authorize);
 		assertEquals(AbstractInitPayment.Status.PENDING, authorize.getStatus());
 		assertEquals(participantId_2, authorize.getProcessing().getParticipantId());
 		
 		//get marketplace payment
-		Payment payment = getHeidelpay(privatekey4).fetchMarketplacePayment(authorize.getPayment().getId());
+		MarketplacePayment payment = getHeidelpay(marketplacePrivatekey).fetchMarketplacePayment(authorize.getPayment().getId());
 		assertNotNull(payment);
 		assertNotNull(payment.getId());
 		assertNotNull(payment.getAuthorizationsList());

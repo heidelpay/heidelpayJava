@@ -37,7 +37,7 @@ public class PropertiesUtil {
 	public static final String PRIVATE_KEY1 = "privatekey1";
 	public static final String PRIVATE_KEY2 = "privatekey2";
 	public static final String PRIVATE_KEY3 = "privatekey3";
-	public static final String PRIVATE_KEY4 = "privatekey4";
+	public static final String MARKETPLACE_PRIVATE_KEY = "marketplacePrivatekey";
 
 	private Properties properties;
 	

@@ -814,7 +814,7 @@ public class Heidelpay {
 	 * @return Payment object
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
-	public Payment fetchMarketplacePayment(String paymentId) throws HttpCommunicationException {
+	public MarketplacePayment fetchMarketplacePayment(String paymentId) throws HttpCommunicationException {
 		return paymentService.fetchMarketplacePayment(paymentId);
 	}
 
