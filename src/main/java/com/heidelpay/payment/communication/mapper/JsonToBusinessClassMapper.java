@@ -451,10 +451,14 @@ public class JsonToBusinessClassMapper {
 		processing.setPdfLink(json.getPdfLink());
 		processing.setExternalOrderId(json.getExternalOrderId());
 		processing.setZgReferenceId(json.getZgReferenceId());
+		processing.setCreatorId(json.getCreatorId());
+		processing.setIdentification(json.getIdentification());
+		processing.setTraceId(json.getTraceId());
+		processing.setParticipantId(json.getParticipantId());
 		return processing;
 	}
 
-	public Payment mapToBusinessObject(Payment payment, JsonPayment json) {
+	public <T extends Payment> T mapToBusinessObject(T payment, JsonPayment json) {
 		payment.setAmountTotal(json.getAmount().getTotal());
 		payment.setAmountCanceled(json.getAmount().getCanceled());
 		payment.setAmountCharged(json.getAmount().getCharged());

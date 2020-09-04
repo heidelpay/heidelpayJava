@@ -45,7 +45,7 @@ import com.heidelpay.payment.communication.json.JsonErrorObject;
 /**
  * Provides functions which is interact with json
  */
-public class JsonParser<T> {
+public class JsonParser {
 
 	private static final String ERRORS = "errors";
 	private static final String ERROR_CODE = "code";

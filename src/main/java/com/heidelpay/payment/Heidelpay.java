@@ -354,13 +354,28 @@ public class Heidelpay {
 
 	/**
 	 * Authorize call with an Authorization object. The Authorization object must
-	 * have at least an amount, a currency, a typeId
+	 * have at least an amount, a currency, a typeId.
 	 * 
-	 * @param authorization Authorization object
+	 * @param authorization Authorization object.
+	 * <br>
+	 * <b>Note:</b> even if <code>MarketplaceAuthorization</code> is used, (<code>MarketplaceAuthorization extends Authorization</code>), a normal authorization will be executed.
 	 * @return Authorization with paymentId and authorize id
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
+	 * 
 	 */
 	public Authorization authorize(Authorization authorization) throws HttpCommunicationException {
+		return paymentService.authorize(authorization);
+	}
+	
+	/**
+	 * Authorize call with an MarketplaceAuthorization object. The Authorization object must
+	 * have at least an amount, a currency, a typeId and basket with participantId.
+	 * 
+	 * @param authorization Authorization object
+	 * @return MarketplaceAuthorization with paymentId and authorize id in pending status.
+	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
+	 */
+	public MarketplaceAuthorization authorize(MarketplaceAuthorization authorization) throws HttpCommunicationException {
 		return paymentService.authorize(authorization);
 	}
 
@@ -778,7 +793,9 @@ public class Heidelpay {
 	}
 
 	/**
-	 * Load the whole Payment Object for the given paymentId
+	 * Load the whole Payment Object for the given paymentId.
+	 * <br><br>
+	 * If this method is being used to fetch marketplace payment, it may cause unexpected response data.
 	 * 
 	 * @param paymentId used for fetching a payment
 	 * @return Payment object
@@ -786,6 +803,19 @@ public class Heidelpay {
 	 */
 	public Payment fetchPayment(String paymentId) throws HttpCommunicationException {
 		return paymentService.fetchPayment(paymentId);
+	}
+	
+	/**
+	 * Load the whole Payment Object for the given marketplace paymentId
+	 * <br><br>
+	 * If this method is being used to fetch normal payment, it may cause unexpected response data.
+	 * 
+	 * @param paymentId used for fetching a marketplace payment.
+	 * @return Payment object
+	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
+	 */
+	public MarketplacePayment fetchMarketplacePayment(String paymentId) throws HttpCommunicationException {
+		return paymentService.fetchMarketplacePayment(paymentId);
 	}
 
 	/**

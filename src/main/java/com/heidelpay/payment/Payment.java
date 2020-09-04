@@ -365,5 +365,4 @@ public class Payment extends AbstractPayment {
 	public void setPayoutList(List<Payout> payoutList) {
 		this.payoutList = payoutList;
 	}
-
 }
