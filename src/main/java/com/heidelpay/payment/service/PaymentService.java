@@ -36,6 +36,7 @@ import com.heidelpay.payment.Charge;
 import com.heidelpay.payment.Customer;
 import com.heidelpay.payment.Heidelpay;
 import com.heidelpay.payment.MarketplaceAuthorization;
+import com.heidelpay.payment.MarketplaceCharge;
 import com.heidelpay.payment.MarketplacePayment;
 import com.heidelpay.payment.Metadata;
 import com.heidelpay.payment.Payment;
@@ -252,17 +253,27 @@ public class PaymentService {
 	 * @throws HttpCommunicationException
 	 */
 	public MarketplaceAuthorization authorize(MarketplaceAuthorization authorization) throws HttpCommunicationException {
-		String response = restCommunication.httpPost(urlUtil.getRestUrl(authorization), heidelpay.getPrivateKey(),
-				jsonToBusinessClassMapper.map(authorization));
+		String response = restCommunication.httpPost(urlUtil.getRestUrl(authorization), heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(authorization));
 		JsonAuthorization jsonAuthorization = jsonParser.fromJson(response, JsonAuthorization.class);
 		authorization = (MarketplaceAuthorization) jsonToBusinessClassMapper.mapToBusinessObject(authorization, jsonAuthorization);
-		authorization.setPayment(fetchPayment(jsonAuthorization.getResources().getPaymentId()));
+		authorization.setPayment(fetchMarketplacePayment(jsonAuthorization.getResources().getPaymentId()));
 		authorization.setHeidelpay(heidelpay);
 		return authorization;
 	}
 
 	public Charge charge(Charge charge) throws HttpCommunicationException {
 		return charge(charge, urlUtil.getRestUrl(charge));
+	}
+	
+	public MarketplaceCharge charge(MarketplaceCharge charge) throws HttpCommunicationException {
+		String response = restCommunication.httpPost(urlUtil.getRestUrl(charge), heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(charge));
+		JsonCharge jsonCharge = jsonParser.fromJson(response, JsonCharge.class);
+		charge = (MarketplaceCharge) jsonToBusinessClassMapper.mapToBusinessObject(charge, jsonCharge);
+		charge.setInvoiceId(jsonCharge.getInvoiceId());
+		charge.setPayment(fetchMarketplacePayment(jsonCharge.getResources().getPaymentId()));
+		charge.setPaymentId(jsonCharge.getResources().getPaymentId());
+		charge.setHeidelpay(heidelpay);
+		return charge;
 	}
 
 	public Payout payout(Payout payout) throws HttpCommunicationException {
@@ -351,8 +362,7 @@ public class PaymentService {
 	}
 
 	private Charge charge(Charge charge, String url) throws HttpCommunicationException {
-		String response = restCommunication.httpPost(url, heidelpay.getPrivateKey(),
-				jsonToBusinessClassMapper.map(charge));
+		String response = restCommunication.httpPost(url, heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(charge));
 		JsonCharge jsonCharge = jsonParser.fromJson(response, JsonCharge.class);
 		charge = (Charge) jsonToBusinessClassMapper.mapToBusinessObject(charge, jsonCharge);
 		charge.setInvoiceId(jsonCharge.getInvoiceId());
@@ -361,7 +371,7 @@ public class PaymentService {
 		charge.setHeidelpay(heidelpay);
 		return charge;
 	}
-
+	
 	private Payout payout(Payout payout, String url) throws HttpCommunicationException {
 		com.heidelpay.payment.communication.json.JsonObject json = jsonToBusinessClassMapper.map(payout);
 		String response = restCommunication.httpPost(url, heidelpay.getPrivateKey(), json);
@@ -393,6 +403,10 @@ public class PaymentService {
 		return fetchMarketplacePayment(payment, paymentId);
 	}
 	
+	private <T extends Payment> String getPayment(T payment) throws HttpCommunicationException {
+		return restCommunication.httpGet(urlUtil.getHttpGetUrl(payment, payment.getId()), heidelpay.getPrivateKey());
+	}
+	
 	private Payment fetchPayment(Payment payment, String paymentId) throws HttpCommunicationException {
 		payment.setId(paymentId);
 		
@@ -404,10 +418,6 @@ public class PaymentService {
 		payment.setChargesList(fetchChargeList(payment, getChargesFromTransactions(jsonPayment.getTransactions())));
 		payment.setPayoutList(fetchPayoutList(payment, getPayoutFromTransactions(jsonPayment.getTransactions())));
 		return payment;
-	}
-
-	private <T extends Payment> String getPayment(T payment) throws HttpCommunicationException {
-		return restCommunication.httpGet(urlUtil.getHttpGetUrl(payment, payment.getId()), heidelpay.getPrivateKey());
 	}
 
 	private MarketplacePayment fetchMarketplacePayment(MarketplacePayment payment, String paymentId) throws HttpCommunicationException {
