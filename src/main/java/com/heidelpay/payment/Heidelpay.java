@@ -614,6 +614,18 @@ public class Heidelpay {
 	public Charge charge(Charge charge) throws HttpCommunicationException {
 		return paymentService.charge(charge);
 	}
+	
+	/**
+	 * Charge call with an MarketplaceAuthorization object. The Authorization object must
+	 * have at least an amount, a currency, a typeId and basket with participantId.
+	 * 
+	 * @param authorization Authorization object
+	 * @return MarketplaceAuthorization with paymentId and authorize id in pending status.
+	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
+	 */
+	public MarketplaceCharge charge(MarketplaceCharge charge) throws HttpCommunicationException {
+		return paymentService.charge(charge);
+	}
 
 	/**
 	 * Pay out money to the customer. 

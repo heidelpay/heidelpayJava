@@ -45,6 +45,7 @@ import com.heidelpay.payment.Customer.Salutation;
 import com.heidelpay.payment.CustomerCompanyData;
 import com.heidelpay.payment.Heidelpay;
 import com.heidelpay.payment.MarketplaceAuthorization;
+import com.heidelpay.payment.MarketplaceCharge;
 import com.heidelpay.payment.Metadata;
 import com.heidelpay.payment.PaymentException;
 import com.heidelpay.payment.Processing;
@@ -127,6 +128,21 @@ public abstract class AbstractPaymentTest {
 	
 	protected MarketplaceAuthorization getMarketplaceAuthorization(String typeId, String customerId, String orderId, String metadataId, String basketId, Boolean card3ds) throws MalformedURLException {
 		MarketplaceAuthorization authorization = new MarketplaceAuthorization();
+		authorization
+			.setAmount(new BigDecimal(10))
+			.setCurrency(Currency.getInstance("EUR"))
+			.setTypeId(typeId)
+			.setReturnUrl(new URL("https://www.heidelpay.com"))
+			.setOrderId(orderId)
+			.setCustomerId(customerId)
+			.setMetadataId(metadataId)
+			.setBasketId(basketId)
+			.setCard3ds(card3ds);
+		return authorization;
+	}
+	
+	protected MarketplaceCharge getMarketplaceCharge(String typeId, String customerId, String orderId, String metadataId, String basketId, Boolean card3ds) throws MalformedURLException {
+		MarketplaceCharge authorization = new MarketplaceCharge();
 		authorization
 			.setAmount(new BigDecimal(10))
 			.setCurrency(Currency.getInstance("EUR"))

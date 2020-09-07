@@ -21,7 +21,6 @@ package com.heidelpay.payment.business;
  */
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -246,7 +245,7 @@ public class AuthorizationTest extends AbstractPaymentTest {
 		MarketplaceAuthorization authorizeRequest = getMarketplaceAuthorization(card.getId(), null, null, null, basket.getId(), null);
 		authorizeRequest.setAmount(maxBasket.getAmountTotalGross());
 		
-		Authorization authorize = getHeidelpay(marketplacePrivatekey).authorize(authorizeRequest);
+		MarketplaceAuthorization authorize = getHeidelpay(marketplacePrivatekey).authorize(authorizeRequest);
 		assertNotNull(authorize.getId());
 		assertNotNull(authorize);
 		assertEquals(AbstractInitPayment.Status.PENDING, authorize.getStatus());
@@ -258,6 +257,6 @@ public class AuthorizationTest extends AbstractPaymentTest {
 		assertNotNull(payment.getId());
 		assertNotNull(payment.getAuthorizationsList());
 		assertEquals(1, payment.getAuthorizationsList().size());
-		assertEquals(AbstractInitPayment.Status.PENDING, authorize.getStatus());
+		assertEquals(Payment.State.PENDING, payment.getPaymentState());
 	}
 }
