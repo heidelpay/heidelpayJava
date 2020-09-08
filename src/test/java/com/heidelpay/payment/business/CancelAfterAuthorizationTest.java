@@ -27,10 +27,16 @@ import java.net.MalformedURLException;
 
 import org.junit.Test;
 
+import com.heidelpay.payment.AbstractTransaction;
 import com.heidelpay.payment.Authorization;
+import com.heidelpay.payment.Basket;
 import com.heidelpay.payment.Cancel;
+import com.heidelpay.payment.MarketplaceAuthorization;
+import com.heidelpay.payment.MarketplaceCancel;
+import com.heidelpay.payment.MarketplacePayment;
 import com.heidelpay.payment.Payment;
 import com.heidelpay.payment.communication.HttpCommunicationException;
+import com.heidelpay.payment.paymenttypes.Card;
 
 public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 
@@ -59,7 +65,7 @@ public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 		assertNotNull(cancel.getId());
 		assertEquals(getBigDecimal("0.1000"), cancel.getAmount());
 	}
-	
+
 	@Test
 	public void partialCancelAfterAuthorization() throws HttpCommunicationException, MalformedURLException {
 		Authorization authorize = getHeidelpay().authorize(getAuthorization(createPaymentTypeCard().getId(), false));
@@ -69,7 +75,7 @@ public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 		assertNotNull(cancel.getId());
 		assertEquals(getBigDecimal("0.1000"), cancel.getAmount());
 	}
-	
+
 	@Test
 	public void partialCancelAfterAuthorizationHeidelpay() throws HttpCommunicationException, MalformedURLException {
 		Authorization authorize = getHeidelpay().authorize(getAuthorization(createPaymentTypeCard().getId(), false));
@@ -121,5 +127,46 @@ public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 		assertNotNull(cancel);
 		assertNotNull(cancel.getId());
 		assertEquals("pmt-ref", cancel.getPaymentReference());
+	}
+
+	@Test
+	public void testMarketplaceFullAuthorizeCancel() throws MalformedURLException, HttpCommunicationException {
+		String participantId_1 = "31HA07BC814FC247577B195E59A99FC6";
+		String participantId_2 = "31HA07BC814FC247577B309FF031D3F0";
+
+		// create basket
+		Basket maxBasket = getMaxTestBasket();
+		maxBasket.setAmountTotalDiscount(null);
+
+		maxBasket.getBasketItems().get(0).setParticipantId(participantId_1);
+		maxBasket.getBasketItems().get(1).setParticipantId(participantId_2);
+
+		int basketItemCnt = maxBasket.getBasketItems().size();
+		for (int i = 0; i < basketItemCnt; i++) {
+			maxBasket.getBasketItems().get(i).setAmountDiscount(null);
+		}
+
+		Basket basket = getHeidelpay(marketplacePrivatekey).createBasket(maxBasket);
+
+		// create card
+		Card card = getPaymentTypeCard("4012888888881881");
+		card = (Card) getHeidelpay(marketplacePrivatekey).createPaymentType(card);
+
+		// marketplace authorization
+		MarketplaceAuthorization authorizeRequest = getMarketplaceAuthorization(card.getId(), null, null, null,
+				basket.getId(), null);
+		authorizeRequest.setAmount(maxBasket.getAmountTotalGross());
+
+		MarketplaceAuthorization authorize = getHeidelpay(marketplacePrivatekey).marketplaceAuthorize(authorizeRequest);
+		assertNotNull(authorize.getId());
+		assertNotNull(authorize);
+		assertEquals(AbstractTransaction.Status.PENDING, authorize.getStatus());
+		assertEquals(participantId_2, authorize.getProcessing().getParticipantId());
+
+		//full cancel
+		MarketplaceCancel.FullAuthorizationCancel cancel = new MarketplaceCancel().new FullAuthorizationCancel();
+		cancel.setPaymentReference("test martketplace full cancel");
+		MarketplacePayment fullCancel = authorize.fullCancel(cancel);
+		assertNotNull(fullCancel);
 	}
 }

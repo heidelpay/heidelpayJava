@@ -103,7 +103,7 @@ public class UrlUtil {
 		appendSlashIfNeeded(stringBuilder);
 		stringBuilder.append(RECURRING_URL);
 		String result = stringBuilder.toString();
-		result = result.replace(PLACEHOLDER_TYPE_ID, recurring.getType());
+		result = result.replace(PLACEHOLDER_TYPE_ID, recurring.getTypeId());
 		return result;
 	}
 	public String getRestUrl(PaymentType paymentType) {

@@ -40,36 +40,15 @@ import com.heidelpay.payment.paymenttypes.PaymentType;
  *
  */
 public class Payment extends AbstractPayment {
-
-	private static final String CANCEL_IS_ONLY_POSSIBLE_FOR_AN_AUTHORIZATION = "Cancel is only possible for an Authorization";
-	private static final String PAYMENT_CANCELLATION_NOT_POSSIBLE = "Payment cancellation not possible";
-
-	public enum State {
-		COMPLETED, PENDING, CANCELED, PARTLY, PAYMENT_REVIEW, CHARGEBACK
-	}
-	
-	private State paymentState;
-	private BigDecimal amountTotal;
-	private BigDecimal amountCharged;
-	private BigDecimal amountCanceled;
-	private BigDecimal amountRemaining;
-	
-	private Currency currency;
-	private String orderId;
-	
-	private String customerId;
-	private Customer customer;
-	private String paymentTypeId;
-	private PaymentType paymentType;
-	private String metadataId;
-	private Metadata metadata;
-	private String basketId;
-	private Basket basket;
 	
 	private Authorization authorization;
 	private List<Charge> chargesList;
 	private List<Cancel> cancelList;
 	private List<Payout> payoutList;
+	
+	public Payment() {
+		super();
+	}
 
 	public Payment(Heidelpay heidelpay) {
 		super(heidelpay);
@@ -191,35 +170,6 @@ public class Payment extends AbstractPayment {
 		return new Cancel();
 	}
 
-	public PaymentType getPaymentType() throws HttpCommunicationException {
-		if (paymentType == null) {
-			paymentType = fetchPaymentType(getPaymentTypeId());
-		}
-		return paymentType;
-	}
-
-	private PaymentType fetchPaymentType(String paymentTypeId) throws HttpCommunicationException {
-		return getHeidelpay().fetchPaymentType(paymentTypeId);
-	}
-
-	public Customer getCustomer() throws HttpCommunicationException {
-		if (customer == null && isNotEmpty(getCustomerId())) {
-			customer = fetchCustomer(getCustomerId());
-		}
-		return customer;
-	}
-
-	protected boolean isNotEmpty(String value) {
-		return value != null && !"".equalsIgnoreCase(value.trim());
-	}
-
-	private Customer fetchCustomer(String customerId) throws HttpCommunicationException, PaymentException {
-		return getHeidelpay().fetchCustomer(customerId);
-	}
-
-	private Metadata fetchMetadata(String metadataId) throws HttpCommunicationException {
-		return getHeidelpay().fetchMetadata(metadataId);
-	}
 
 	@Override
 	public String getTypeUrl() {
@@ -231,62 +181,6 @@ public class Payment extends AbstractPayment {
 		return null;
 	}
 
-	public State getPaymentState() {
-		return paymentState;
-	}
-
-	public void setPaymentState(State paymentState) {
-		this.paymentState = paymentState;
-	}
-
-	public BigDecimal getAmountTotal() {
-		return amountTotal;
-	}
-
-	public void setAmountTotal(BigDecimal amountTotal) {
-		this.amountTotal = amountTotal;
-	}
-
-	public BigDecimal getAmountCharged() {
-		return amountCharged;
-	}
-
-	public void setAmountCharged(BigDecimal amountCharged) {
-		this.amountCharged = amountCharged;
-	}
-
-	public BigDecimal getAmountCanceled() {
-		return amountCanceled;
-	}
-
-	public void setAmountCanceled(BigDecimal amountCanceled) {
-		this.amountCanceled = amountCanceled;
-	}
-
-	public BigDecimal getAmountRemaining() {
-		return amountRemaining;
-	}
-
-	public void setAmountRemaining(BigDecimal amountRemaining) {
-		this.amountRemaining = amountRemaining;
-	}
-
-	public Currency getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(Currency currency) {
-		this.currency = currency;
-	}
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
 	public List<Charge> getChargesList() {
 		return chargesList;
 	}
@@ -295,67 +189,12 @@ public class Payment extends AbstractPayment {
 		this.chargesList = chargesList;
 	}
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
-
 	public void setAuthorization(Authorization authorization) {
 		this.authorization = authorization;
 	}
 
 	public void setCancelList(List<Cancel> cancelList) {
 		this.cancelList = cancelList;
-	}
-
-	public String getPaymentTypeId() {
-		return paymentTypeId;
-	}
-
-	public void setPaymentTypeId(String paymentTypeId) {
-		this.paymentTypeId = paymentTypeId;
-	}
-
-	public String getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
-	}
-
-	public String getMetadataId() {
-		return metadataId;
-	}
-
-	public void setMetadataId(String metadataId) {
-		this.metadataId = metadataId;
-	}
-
-	public Metadata getMetadata() throws HttpCommunicationException {
-		if (metadata == null && isNotEmpty(getMetadataId())) {
-			metadata = fetchMetadata(getMetadataId());
-		}
-		return metadata;
-	}
-
-	public void setMetadata(Metadata metadata) {
-		this.metadata = metadata;
-	}
-
-	public String getBasketId() {
-		return basketId;
-	}
-
-	public void setBasketId(String basketId) {
-		this.basketId = basketId;
-	}
-
-	public Basket getBasket() {
-		return basket;
-	}
-
-	public void setBasket(Basket basket) {
-		this.basket = basket;
 	}
 
 	public List<Payout> getPayoutList() {
