@@ -29,9 +29,17 @@ import java.util.Currency;
 
 import org.junit.Test;
 
+import com.heidelpay.payment.AbstractTransaction;
+import com.heidelpay.payment.Basket;
 import com.heidelpay.payment.Cancel;
 import com.heidelpay.payment.Charge;
+import com.heidelpay.payment.MarketplaceCancel;
+import com.heidelpay.payment.MarketplaceCharge;
+import com.heidelpay.payment.MarketplacePayment;
+import com.heidelpay.payment.Payment;
+import com.heidelpay.payment.MarketplaceCancel.FullAuthorizationCancel;
 import com.heidelpay.payment.communication.HttpCommunicationException;
+import com.heidelpay.payment.paymenttypes.Card;
 
 public class CancelAfterChargeTest extends AbstractPaymentTest {
 
@@ -114,4 +122,51 @@ public class CancelAfterChargeTest extends AbstractPaymentTest {
 		assertEquals(new BigDecimal(1.0000).setScale(4), cancel.getAmount());
 	}
 
+	@Test
+	public void testMarketplaceFullCancelChargeWithCard() throws MalformedURLException, HttpCommunicationException {
+		String participantId_1 = "31HA07BC814FC247577B195E59A99FC6";
+		String participantId_2 = "31HA07BC814FC247577B309FF031D3F0";
+		
+		//create basket
+		Basket maxBasket = getMaxTestBasket();
+		maxBasket.setAmountTotalDiscount(null);
+		
+		maxBasket.getBasketItems().get(0).setParticipantId(participantId_1);
+		maxBasket.getBasketItems().get(1).setParticipantId(participantId_2);
+		
+		int basketItemCnt = maxBasket.getBasketItems().size();
+		for(int i=0; i<basketItemCnt; i++) {
+			maxBasket.getBasketItems().get(i).setAmountDiscount(null);
+		}
+
+		Basket basket = getHeidelpay(marketplacePrivatekey).createBasket(maxBasket);	
+		
+		//create card
+		Card card = getPaymentTypeCard("4012888888881881");
+		card = (Card)getHeidelpay(marketplacePrivatekey).createPaymentType(card);
+		
+		//marketplace charge
+		MarketplaceCharge chargeRequest = getMarketplaceCharge(card.getId(), null, null, null, basket.getId(), null);
+		chargeRequest.setAmount(maxBasket.getAmountTotalGross());
+		
+		MarketplaceCharge charge = getHeidelpay(marketplacePrivatekey).marketpalceCharge(chargeRequest);
+		assertNotNull(charge.getId());
+		assertNotNull(charge);
+		assertEquals(AbstractTransaction.Status.PENDING, charge.getStatus());
+		assertEquals(participantId_2, charge.getProcessing().getParticipantId());
+		
+		//get marketplace payment
+		MarketplacePayment payment = getHeidelpay(marketplacePrivatekey).fetchMarketplacePayment(charge.getPayment().getId());
+		assertNotNull(payment);
+		assertNotNull(payment.getId());
+		assertNotNull(payment.getAuthorizationsList());
+		assertEquals(1, payment.getAuthorizationsList().size());
+		assertEquals(Payment.State.PENDING, payment.getPaymentState());
+		
+		//full cancel
+		MarketplaceCancel.FullChargeCancel cancel = new MarketplaceCancel().new FullChargeCancel();
+		cancel.setPaymentReference("test martketplace full cancel");
+		MarketplacePayment fullCancel = charge.fullCancel(cancel);
+		assertNotNull(fullCancel);
+	}
 }

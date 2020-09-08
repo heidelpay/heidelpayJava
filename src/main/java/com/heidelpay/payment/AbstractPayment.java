@@ -1,7 +1,6 @@
 package com.heidelpay.payment;
 
 import java.math.BigDecimal;
-import java.util.Currency;
 
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.paymenttypes.PaymentType;
@@ -185,7 +184,7 @@ public abstract class AbstractPayment implements PaymentType {
 		return getHeidelpay().fetchPaymentType(paymentTypeId);
 	}
 
-	protected Customer fetchCustomer(String customerId) throws HttpCommunicationException, PaymentException {
+	protected Customer fetchCustomer(String customerId) throws HttpCommunicationException {
 		return getHeidelpay().fetchCustomer(customerId);
 	}
 

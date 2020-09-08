@@ -10,7 +10,6 @@ import com.heidelpay.payment.Customer;
 import com.heidelpay.payment.CustomerCompanyData;
 import com.heidelpay.payment.Linkpay;
 import com.heidelpay.payment.MarketplaceCancel;
-import com.heidelpay.payment.Payment;
 import com.heidelpay.payment.Payout;
 import com.heidelpay.payment.Paypage;
 import com.heidelpay.payment.Processing;
