@@ -34,7 +34,7 @@ public class MarketplaceCharge extends AbstractTransaction<MarketplacePayment> {
 	 * @throws HttpCommunicationException
 	 */
 	public MarketplacePayment fullCancel(MarketplaceCancel.FullChargeCancel cancel) throws HttpCommunicationException {		
-		return getHeidelpay().fulllCancel(getPayment().getId(), cancel);
+		return getHeidelpay().fullCancel(getPayment().getId(), cancel);
 	}
 
 

@@ -31,7 +31,7 @@ public class MarketplaceAuthorization extends AbstractTransaction<MarketplacePay
 	 * @throws HttpCommunicationException
 	 */
 	public MarketplacePayment fullCancel(MarketplaceCancel.FullAuthorizationCancel cancel) throws HttpCommunicationException {
-		return getHeidelpay().fulllCancel(getPayment().getId(), cancel);
+		return getHeidelpay().fullCancel(getPayment().getId(), cancel);
 	}
 
 	@Override

@@ -627,7 +627,7 @@ public class Heidelpay {
 	 * @return MarketplaceAuthorization with paymentId and authorize id in pending status.
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
-	public MarketplaceCharge marketpalceCharge(MarketplaceCharge charge) throws HttpCommunicationException {
+	public MarketplaceCharge marketplaceCharge(MarketplaceCharge charge) throws HttpCommunicationException {
 		return marketplacePaymentService.marketplaceCharge(charge);
 	}
 
@@ -752,7 +752,7 @@ public class Heidelpay {
 	 * @return
 	 * @throws HttpCommunicationException
 	 */
-	public <T extends MarketplaceCancel> MarketplacePayment fulllCancel(String paymentId, T cancel) throws HttpCommunicationException {
+	public <T extends MarketplaceCancel> MarketplacePayment fullCancel(String paymentId, T cancel) throws HttpCommunicationException {
 		return marketplacePaymentService.fullCancel(paymentId, cancel);
 	}
 

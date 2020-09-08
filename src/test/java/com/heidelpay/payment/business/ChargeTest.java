@@ -259,7 +259,7 @@ public class ChargeTest extends AbstractPaymentTest {
 		MarketplaceCharge chargeRequest = getMarketplaceCharge(card.getId(), null, null, null, basket.getId(), null);
 		chargeRequest.setAmount(maxBasket.getAmountTotalGross());
 		
-		MarketplaceCharge charge = getHeidelpay(marketplacePrivatekey).marketpalceCharge(chargeRequest);
+		MarketplaceCharge charge = getHeidelpay(marketplacePrivatekey).marketplaceCharge(chargeRequest);
 		assertNotNull(charge.getId());
 		assertNotNull(charge);
 		assertEquals(AbstractTransaction.Status.PENDING, charge.getStatus());
@@ -301,7 +301,7 @@ public class ChargeTest extends AbstractPaymentTest {
 		MarketplaceCharge chargeRequest = getMarketplaceCharge(sdd.getId(), null, null, null, basket.getId(), null);
 		chargeRequest.setAmount(maxBasket.getAmountTotalGross());
 		
-		MarketplaceCharge charge = getHeidelpay(marketplacePrivatekey).marketpalceCharge(chargeRequest);
+		MarketplaceCharge charge = getHeidelpay(marketplacePrivatekey).marketplaceCharge(chargeRequest);
 		assertNotNull(charge.getId());
 		assertNotNull(charge);
 		assertEquals(AbstractTransaction.Status.SUCCESS, charge.getStatus());
@@ -342,7 +342,7 @@ public class ChargeTest extends AbstractPaymentTest {
 		MarketplaceCharge chargeRequest = getMarketplaceCharge(sofort.getId(), null, null, null, basket.getId(), null);
 		chargeRequest.setAmount(maxBasket.getAmountTotalGross());
 		
-		MarketplaceCharge charge = getHeidelpay(marketplacePrivatekey).marketpalceCharge(chargeRequest);
+		MarketplaceCharge charge = getHeidelpay(marketplacePrivatekey).marketplaceCharge(chargeRequest);
 		assertNotNull(charge.getId());
 		assertNotNull(charge);
 		assertEquals(AbstractTransaction.Status.PENDING, charge.getStatus());
