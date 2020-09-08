@@ -34,6 +34,7 @@ import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.impl.HttpClientBasedRestCommunication;
 import com.heidelpay.payment.paymenttypes.PaymentType;
 import com.heidelpay.payment.service.LinkpayService;
+import com.heidelpay.payment.service.MarketplacePaymentService;
 import com.heidelpay.payment.service.PaymentService;
 import com.heidelpay.payment.service.PaypageService;
 import com.heidelpay.payment.service.WebhookService;
@@ -53,6 +54,7 @@ public class Heidelpay {
 	private String privateKey;
 	private String endPoint;
 	private PaymentService paymentService;
+	private MarketplacePaymentService marketplacePaymentService;
 	private PaypageService paypageService;
 	private LinkpayService linkpayService;
 	private WebhookService webhookService;
@@ -77,6 +79,7 @@ public class Heidelpay {
 		this.privateKey = privateKey;
 		this.endPoint = null;
 		this.paymentService = new PaymentService(this, restCommunication);
+		this.marketplacePaymentService = new MarketplacePaymentService(this, restCommunication);
 		this.paypageService = new PaypageService(this, restCommunication);
 		this.linkpayService = new LinkpayService(this, restCommunication);
 		this.webhookService = new WebhookService(this, restCommunication);
@@ -93,6 +96,7 @@ public class Heidelpay {
 		this.privateKey = privateKey;
 		this.endPoint = endPoint;
 		this.paymentService = new PaymentService(this, restCommunication);
+		this.marketplacePaymentService = new MarketplacePaymentService(this, restCommunication);
 		this.paypageService = new PaypageService(this, restCommunication);
 		this.linkpayService = new LinkpayService(this, restCommunication);
 		this.webhookService = new WebhookService(this, restCommunication);
@@ -375,8 +379,8 @@ public class Heidelpay {
 	 * @return MarketplaceAuthorization with paymentId and authorize id in pending status.
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
-	public MarketplaceAuthorization authorize(MarketplaceAuthorization authorization) throws HttpCommunicationException {
-		return paymentService.authorize(authorization);
+	public MarketplaceAuthorization marketplaceAuthorize(MarketplaceAuthorization authorization) throws HttpCommunicationException {
+		return marketplacePaymentService.marketplaceAuthorize(authorization);
 	}
 
 	/**
@@ -623,8 +627,8 @@ public class Heidelpay {
 	 * @return MarketplaceAuthorization with paymentId and authorize id in pending status.
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
-	public MarketplaceCharge charge(MarketplaceCharge charge) throws HttpCommunicationException {
-		return paymentService.charge(charge);
+	public MarketplaceCharge marketplaceCharge(MarketplaceCharge charge) throws HttpCommunicationException {
+		return marketplacePaymentService.marketplaceCharge(charge);
 	}
 
 	/**
@@ -737,6 +741,20 @@ public class Heidelpay {
 	public Cancel cancelCharge(String paymentId, String chargeId) throws HttpCommunicationException {
 		return paymentService.cancelCharge(paymentId, chargeId);
 	}
+	
+	/**
+	 * Fully cancel for marketplace
+	 * <b>Note:</b>: <code>amount</code> will be ignored due to fully cancel. Only <code>paymentReference</code> is processed.
+	 * 
+	 * @param <T> refers sub type of MarketplaceCancel. For example: MarketplaceCancel.FullAuthorizationCancel
+	 * @param paymentId refers to the payment.
+	 * @param cancel refers to sub type of MarketplaceCancel.
+	 * @return
+	 * @throws HttpCommunicationException
+	 */
+	public <T extends MarketplaceCancel> MarketplacePayment fullCancel(String paymentId, T cancel) throws HttpCommunicationException {
+		return marketplacePaymentService.fullCancel(paymentId, cancel);
+	}
 
 	/**
 	 * Cancel (Refund) partial Charge
@@ -827,7 +845,7 @@ public class Heidelpay {
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
 	public MarketplacePayment fetchMarketplacePayment(String paymentId) throws HttpCommunicationException {
-		return paymentService.fetchMarketplacePayment(paymentId);
+		return marketplacePaymentService.fetchMarketplacePayment(paymentId);
 	}
 
 	/**
@@ -851,6 +869,28 @@ public class Heidelpay {
 	 */
 	public Authorization fetchAuthorization(String paymentId) throws HttpCommunicationException {
 		return paymentService.fetchAuthorization(paymentId);
+	}
+	
+	/**
+	 * Load the Marketplace Authorization for the given paymentId.
+	 * 
+	 * @param paymentId used for fetching an authorization
+	 * @return MarketplaceAuthorization object
+	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
+	 */
+	public MarketplaceAuthorization fetchMarketplaceAuthorization(String paymentId, String authorizeId) throws HttpCommunicationException {
+		return marketplacePaymentService.fetchMarketplaceAuthorization(paymentId, authorizeId);
+	}
+	
+	/**
+	 * Load the Marketplace Charge for the given paymentId.
+	 * 
+	 * @param paymentId used for fetching a charge
+	 * @return MarketplaceCharge object
+	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
+	 */
+	public MarketplaceCharge fetchMarketplaceCharge(String paymentId, String chargeId) throws HttpCommunicationException {
+		return marketplacePaymentService.fetchMarketplaceCharge(paymentId, chargeId);
 	}
 
 	/**
@@ -942,7 +982,7 @@ public class Heidelpay {
 	private Recurring getRecurring(String typeId, String customerId, String metadataId, URL returnUrl) {
 		Recurring recurring = new Recurring();
 		recurring.setCustomerId(customerId);
-		recurring.setType(typeId);
+		recurring.setTypeId(typeId);
 		recurring.setReturnUrl(returnUrl);
 		recurring.setMetadataId(metadataId);
 		return recurring;

@@ -31,7 +31,7 @@ import java.util.Currency;
 
 import org.junit.Test;
 
-import com.heidelpay.payment.AbstractInitPayment;
+import com.heidelpay.payment.AbstractTransaction;
 import com.heidelpay.payment.Authorization;
 import com.heidelpay.payment.Basket;
 import com.heidelpay.payment.Customer;
@@ -68,7 +68,7 @@ public class AuthorizationTest extends AbstractPaymentTest {
 		assertNotNull(authorize.getId());
 		assertEquals("COR.000.100.112", authorize.getMessage().getCode());
 		assertNotNull(authorize.getMessage().getCustomer());
-		assertEquals(com.heidelpay.payment.AbstractInitPayment.Status.SUCCESS, authorize.getStatus());
+		assertEquals(com.heidelpay.payment.AbstractTransaction.Status.SUCCESS, authorize.getStatus());
 	}
 	
 	@Test
@@ -245,10 +245,10 @@ public class AuthorizationTest extends AbstractPaymentTest {
 		MarketplaceAuthorization authorizeRequest = getMarketplaceAuthorization(card.getId(), null, null, null, basket.getId(), null);
 		authorizeRequest.setAmount(maxBasket.getAmountTotalGross());
 		
-		MarketplaceAuthorization authorize = getHeidelpay(marketplacePrivatekey).authorize(authorizeRequest);
+		MarketplaceAuthorization authorize = getHeidelpay(marketplacePrivatekey).marketplaceAuthorize(authorizeRequest);
 		assertNotNull(authorize.getId());
 		assertNotNull(authorize);
-		assertEquals(AbstractInitPayment.Status.PENDING, authorize.getStatus());
+		assertEquals(AbstractTransaction.Status.PENDING, authorize.getStatus());
 		assertEquals(participantId_2, authorize.getProcessing().getParticipantId());
 		
 		//get marketplace payment
@@ -258,5 +258,12 @@ public class AuthorizationTest extends AbstractPaymentTest {
 		assertNotNull(payment.getAuthorizationsList());
 		assertEquals(1, payment.getAuthorizationsList().size());
 		assertEquals(Payment.State.PENDING, payment.getPaymentState());
+		
+		//get marketplace authorize
+		authorize = getHeidelpay(marketplacePrivatekey).fetchMarketplaceAuthorization(authorize.getPayment().getId(), authorize.getId());
+		assertNotNull(authorize.getId());
+		assertNotNull(authorize);
+		assertEquals(AbstractTransaction.Status.PENDING, authorize.getStatus());
+		assertEquals(participantId_2, authorize.getProcessing().getParticipantId());
 	}
 }

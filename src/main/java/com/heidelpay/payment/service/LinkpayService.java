@@ -25,7 +25,6 @@ import com.heidelpay.payment.Linkpay;
 import com.heidelpay.payment.communication.HeidelpayRestCommunication;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.JsonParser;
-import com.heidelpay.payment.communication.impl.HttpClientBasedRestCommunication;
 import com.heidelpay.payment.communication.json.JsonLinkpay;
 import com.heidelpay.payment.communication.mapper.JsonToBusinessClassMapper;
 
