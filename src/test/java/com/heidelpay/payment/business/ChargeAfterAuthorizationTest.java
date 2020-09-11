@@ -124,7 +124,7 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 		assertEquals(participantId_2, authorize.getProcessing().getParticipantId());
 		
 		//confirm authorization
-		int redirectStatus = openNot3dsMarketPlaceRedirectUrl(authorize.getRedirectUrl().toString());
+		int redirectStatus = confirmMarketplacePendingTransaction(authorize.getRedirectUrl().toString());
 		await().atLeast(5, SECONDS).atMost(10, SECONDS);
 		assertEquals(HttpStatus.SC_MOVED_TEMPORARILY, redirectStatus);
 
@@ -176,7 +176,7 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 		assertEquals(participantId_2, authorize.getProcessing().getParticipantId());
 		
 		//confirm authorization
-		int redirectStatus = openNot3dsMarketPlaceRedirectUrl(authorize.getRedirectUrl().toString());
+		int redirectStatus = confirmMarketplacePendingTransaction(authorize.getRedirectUrl().toString());
 		await().atLeast(5, SECONDS).atMost(10, SECONDS);
 		assertEquals(HttpStatus.SC_MOVED_TEMPORARILY, redirectStatus);
 

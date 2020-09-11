@@ -166,8 +166,8 @@ public class CancelAfterChargeTest extends AbstractPaymentTest {
 		assertEquals(Payment.State.PENDING, payment.getPaymentState());
 		
 		//confirm authorization
-		int redirectStatus = openNot3dsMarketPlaceRedirectUrl(charge.getRedirectUrl().toString());
-		await().atLeast(5, SECONDS).atMost(10, SECONDS);
+		int redirectStatus = confirmMarketplacePendingTransaction(charge.getRedirectUrl().toString());
+		await().atLeast(3, SECONDS).atMost(10, SECONDS);
 		assertEquals(HttpStatus.SC_MOVED_TEMPORARILY, redirectStatus);
 		
 		//full cancel

@@ -1,5 +1,8 @@
 package com.heidelpay.payment.business;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
+
 /*-
  * #%L
  * Heidelpay Java SDK
@@ -613,7 +616,7 @@ public abstract class AbstractPaymentTest {
 		return basketItem;
 	}
 
-	protected int openNot3dsMarketPlaceRedirectUrl(String redirectUrl) {
+	protected int confirmMarketplacePendingTransaction(String redirectUrl) {
 		try {
 			HttpClient httpClient = HttpClients.createDefault();
 			HttpResponse response = httpClient.execute(new HttpGet(redirectUrl));
@@ -621,8 +624,8 @@ public abstract class AbstractPaymentTest {
 			Document html = Jsoup.parse(readHtml(response.getEntity().getContent()));
 			String apiRediretUrl = html.getElementById("authForm").attr("action");
 			
-			System.out.println(apiRediretUrl);
 			response = httpClient.execute(new HttpPost(apiRediretUrl));
+			await().atLeast(5, SECONDS).atMost(10, SECONDS);
 			return response.getStatusLine().getStatusCode();
 		} catch (IOException e) {
 			e.printStackTrace();

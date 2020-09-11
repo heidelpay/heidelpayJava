@@ -254,7 +254,7 @@ public class AuthorizationTest extends AbstractPaymentTest {
 		assertEquals(AbstractTransaction.Status.PENDING, authorize.getStatus());
 		assertEquals(participantId_2, authorize.getProcessing().getParticipantId());
 		
-		int redirectStatus = openNot3dsMarketPlaceRedirectUrl(authorize.getRedirectUrl().toString());
+		int redirectStatus = confirmMarketplacePendingTransaction(authorize.getRedirectUrl().toString());
 		await().atLeast(5, SECONDS).atMost(10, SECONDS);
 		assertEquals(HttpStatus.SC_MOVED_TEMPORARILY, redirectStatus);
 		
