@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.Currency;
 import java.util.Date;
 
+import com.heidelpay.payment.communication.JsonFieldIgnore;
 import com.heidelpay.payment.paymenttypes.PaymentType;
 
 public abstract class AbstractTransaction<T extends AbstractPayment> implements PaymentType {
@@ -54,9 +55,14 @@ public abstract class AbstractTransaction<T extends AbstractPayment> implements 
 	private Date date;
 	private String type;
 	
-	private transient T payment;
-	private transient Heidelpay heidelpay;
-	private transient URL resourceUrl;
+	@JsonFieldIgnore
+	private T payment;
+	
+	@JsonFieldIgnore
+	private Heidelpay heidelpay;
+	
+	@JsonFieldIgnore
+	private URL resourceUrl;
 
 	public AbstractTransaction() {
 		super();
