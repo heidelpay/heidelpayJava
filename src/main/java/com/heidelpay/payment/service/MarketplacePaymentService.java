@@ -14,8 +14,10 @@ import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.json.JsonAuthorization;
 import com.heidelpay.payment.communication.json.JsonCancel;
 import com.heidelpay.payment.communication.json.JsonCharge;
+import com.heidelpay.payment.communication.json.JsonObject;
 import com.heidelpay.payment.communication.json.JsonPayment;
 import com.heidelpay.payment.communication.json.JsonTransaction;
+import com.heidelpay.payment.paymenttypes.PaymentType;
 
 public class MarketplacePaymentService extends PaymentService {
 
@@ -50,6 +52,34 @@ public class MarketplacePaymentService extends PaymentService {
 		charge.setPaymentId(jsonCharge.getResources().getPaymentId());
 		charge.setHeidelpay(heidelpay);
 		return charge;
+	}
+	
+	public MarketplaceCharge marketplaceChargeAuthorization(String paymentId, String authorizeId, MarketplaceCharge charge) throws HttpCommunicationException {
+		String url = urlUtil.getRestUrl().concat("/").concat(charge.getChargeAuthorizationUrl(paymentId, authorizeId));
+		String response = restCommunication.httpPost(url, heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(charge));
+		JsonCharge jsonCharge = jsonParser.fromJson(response, JsonCharge.class);
+		charge = (MarketplaceCharge) jsonToBusinessClassMapper.mapToBusinessObject(charge, jsonCharge);
+		charge.setInvoiceId(jsonCharge.getInvoiceId());
+		charge.setPayment(fetchMarketplacePayment(jsonCharge.getResources().getPaymentId()));
+		charge.setPaymentId(jsonCharge.getResources().getPaymentId());
+		charge.setHeidelpay(heidelpay);
+		return charge;
+	}
+	
+	public MarketplacePayment marketplaceFullChargeAuthorizations(String paymentId, String paymentReference) throws HttpCommunicationException {
+		MarketplaceCharge charge = new MarketplaceCharge();
+		charge.setPaymentReference(paymentReference);
+		
+		String url = urlUtil.getRestUrl().concat("/").concat(charge.getFullChargeAuthorizationsUrl(paymentId));
+		String response = restCommunication.httpPost(url, heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(charge));
+		JsonPayment jsonPayment = jsonParser.fromJson(response, JsonPayment.class);
+		MarketplacePayment paymentResponse = new MarketplacePayment(this.heidelpay);
+		paymentResponse.setId(paymentId);
+		paymentResponse = jsonToBusinessClassMapper.mapToBusinessObject(paymentResponse, jsonPayment);
+		paymentResponse.setCancelList(fetchCancelList(paymentResponse, getCancelsFromTransactions(jsonPayment.getTransactions())));
+		paymentResponse.setAuthorizationsList(fetchAuthorizationList(paymentResponse, jsonPayment.getTransactions()));
+		paymentResponse.setChargesList(fetchChargeList(paymentResponse, getChargesFromTransactions(jsonPayment.getTransactions())));
+		return paymentResponse;
 	}
 	
 	public MarketplacePayment fetchMarketplacePayment(String paymentId) throws HttpCommunicationException {
@@ -101,7 +131,7 @@ public class MarketplacePaymentService extends PaymentService {
 		return authorization;
 	}
 	
-	public <T extends MarketplaceCancel> MarketplacePayment fullCancel(String paymentId, T cancel) throws HttpCommunicationException {
+	public <T extends MarketplaceCancel> MarketplacePayment marketplaceFullCancel(String paymentId, T cancel) throws HttpCommunicationException {
 		String response = restCommunication.httpPost(urlUtil.getPaymentUrl(cancel, paymentId), heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(cancel));
 		JsonPayment jsonPayment = jsonParser.fromJson(response, JsonPayment.class);
 		MarketplacePayment paymentResponse = new MarketplacePayment(this.heidelpay);
@@ -184,5 +214,24 @@ public class MarketplacePaymentService extends PaymentService {
 		}
 		return authorizationCancelList;
 
+	}
+	
+	private PaymentType createPaymentTypeWithUrl(final String url) {
+		return new PaymentType() {
+			@Override
+			public String getTypeUrl() {
+				return url;
+			}
+
+			@Override
+			public String getId() {
+				return "";
+			}
+
+			@Override
+			public PaymentType map(PaymentType paymentType, JsonObject jsonObject) {
+				return null;
+			}
+		};
 	}
 }

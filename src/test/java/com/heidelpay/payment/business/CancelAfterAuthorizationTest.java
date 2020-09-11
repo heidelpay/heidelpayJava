@@ -166,7 +166,7 @@ public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 		//full cancel
 		MarketplaceCancel.FullAuthorizationCancel cancel = new MarketplaceCancel().new FullAuthorizationCancel();
 		cancel.setPaymentReference("test martketplace full cancel");
-		MarketplacePayment fullCancel = authorize.fullCancel(cancel);
+		MarketplacePayment fullCancel = authorize.getPayment().fullCancel(cancel);
 		assertNotNull(fullCancel);
 	}
 }

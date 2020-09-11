@@ -37,7 +37,6 @@ import com.heidelpay.payment.MarketplaceCancel;
 import com.heidelpay.payment.MarketplaceCharge;
 import com.heidelpay.payment.MarketplacePayment;
 import com.heidelpay.payment.Payment;
-import com.heidelpay.payment.MarketplaceCancel.FullAuthorizationCancel;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.paymenttypes.Card;
 
@@ -166,7 +165,7 @@ public class CancelAfterChargeTest extends AbstractPaymentTest {
 		//full cancel
 		MarketplaceCancel.FullChargeCancel cancel = new MarketplaceCancel().new FullChargeCancel();
 		cancel.setPaymentReference("test martketplace full cancel");
-		MarketplacePayment fullCancel = charge.fullCancel(cancel);
+		MarketplacePayment fullCancel = charge.getPayment().fullCancel(cancel);
 		assertNotNull(fullCancel);
 	}
 }
