@@ -257,7 +257,7 @@ public class ChargeTest extends AbstractPaymentTest {
 		Basket basket = getHeidelpay(marketplacePrivatekey).createBasket(maxBasket);	
 		
 		//create card
-		Card card = getPaymentTypeCard("4012888888881881");
+		Card card = getPaymentTypeCard("4012888888881881"); //do not change card number except error case
 		card = (Card)getHeidelpay(marketplacePrivatekey).createPaymentType(card);
 		
 		//marketplace charge

@@ -1,5 +1,7 @@
 package com.heidelpay.payment.business;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 /*-
  * #%L
  * Heidelpay Java SDK
@@ -27,6 +29,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Currency;
 
+import org.apache.http.HttpStatus;
 import org.junit.Test;
 
 import com.heidelpay.payment.AbstractTransaction;
@@ -141,7 +144,7 @@ public class CancelAfterChargeTest extends AbstractPaymentTest {
 		Basket basket = getHeidelpay(marketplacePrivatekey).createBasket(maxBasket);	
 		
 		//create card
-		Card card = getPaymentTypeCard("4012888888881881");
+		Card card = getPaymentTypeCard("4012888888881881"); //do not change card number except error case
 		card = (Card)getHeidelpay(marketplacePrivatekey).createPaymentType(card);
 		
 		//marketplace charge
@@ -159,13 +162,21 @@ public class CancelAfterChargeTest extends AbstractPaymentTest {
 		assertNotNull(payment);
 		assertNotNull(payment.getId());
 		assertNotNull(payment.getAuthorizationsList());
-		assertEquals(1, payment.getAuthorizationsList().size());
+		assertEquals(1, payment.getChargesList().size());
 		assertEquals(Payment.State.PENDING, payment.getPaymentState());
+		
+		//confirm authorization
+		int redirectStatus = openNot3dsMarketPlaceRedirectUrl(charge.getRedirectUrl().toString());
+		await().atLeast(5, SECONDS).atMost(10, SECONDS);
+		assertEquals(HttpStatus.SC_MOVED_TEMPORARILY, redirectStatus);
 		
 		//full cancel
 		MarketplaceCancel.FullChargeCancel cancel = new MarketplaceCancel().new FullChargeCancel();
 		cancel.setPaymentReference("test martketplace full cancel");
-		MarketplacePayment fullCancel = charge.getPayment().fullCancel(cancel);
-		assertNotNull(fullCancel);
+		MarketplacePayment fullCancelPayment = charge.getPayment().fullCancel(cancel);
+		assertNotNull(fullCancelPayment);
+		assertEquals(Payment.State.CANCELED, fullCancelPayment.getPaymentState());
+		assertEquals(2, fullCancelPayment.getChargesList().size());
+		assertEquals(2, fullCancelPayment.getCancelList().size());
 	}
 }

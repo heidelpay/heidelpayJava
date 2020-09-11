@@ -1,5 +1,7 @@
 package com.heidelpay.payment.business;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 /*-
  * #%L
  * Heidelpay Java SDK
@@ -21,11 +23,11 @@ package com.heidelpay.payment.business;
  */
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 
+import org.apache.http.HttpStatus;
 import org.junit.Test;
 
 import com.heidelpay.payment.AbstractTransaction;
@@ -35,7 +37,7 @@ import com.heidelpay.payment.Charge;
 import com.heidelpay.payment.MarketplaceAuthorization;
 import com.heidelpay.payment.MarketplaceCharge;
 import com.heidelpay.payment.MarketplacePayment;
-import com.heidelpay.payment.PaymentException;
+import com.heidelpay.payment.Payment;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.paymenttypes.Card;
 
@@ -107,7 +109,7 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 		Basket basket = getHeidelpay(marketplacePrivatekey).createBasket(maxBasket);
 
 		// create card
-		Card card = getPaymentTypeCard("4012888888881881");
+		Card card = getPaymentTypeCard("4012888888881881"); //do not change card number except error case
 		card = (Card) getHeidelpay(marketplacePrivatekey).createPaymentType(card);
 
 		// marketplace authorization
@@ -120,15 +122,23 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 		assertNotNull(authorize);
 		assertEquals(AbstractTransaction.Status.PENDING, authorize.getStatus());
 		assertEquals(participantId_2, authorize.getProcessing().getParticipantId());
+		
+		//confirm authorization
+		int redirectStatus = openNot3dsMarketPlaceRedirectUrl(authorize.getRedirectUrl().toString());
+		await().atLeast(5, SECONDS).atMost(10, SECONDS);
+		assertEquals(HttpStatus.SC_MOVED_TEMPORARILY, redirectStatus);
 
-		//full charge authorizations expects error due to not yet confirm
-		try {
-			MarketplacePayment payment = getHeidelpay(marketplacePrivatekey).fetchMarketplacePayment(authorize.getPaymentId());
-			payment.fullChargeAuthorizations("test marketplace full capture");
-		} catch (PaymentException e) {
-			assertNotNull(e);
-			assertTrue(e.getUrl().endsWith(String.format("/marketplace/payments/%s/authorize/charges", authorize.getPaymentId())));
-		}
+		//get payment
+		MarketplacePayment payment = getHeidelpay(marketplacePrivatekey).fetchMarketplacePayment(authorize.getPaymentId());
+		assertEquals(2, payment.getAuthorizationsList().size());
+		assertEquals(Payment.State.PENDING, payment.getPaymentState());
+		
+		//full charge authorizations
+		MarketplacePayment fullCapturePayment = payment.fullChargeAuthorizations("test full marketplace full capture.");
+		assertEquals(payment.getId(), fullCapturePayment.getId());
+		assertEquals(2, fullCapturePayment.getAuthorizationsList().size());
+		assertEquals(2, fullCapturePayment.getChargesList().size());
+		assertEquals(Payment.State.COMPLETED, fullCapturePayment.getPaymentState());
 	}
 	
 	@Test
@@ -151,7 +161,7 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 		Basket basket = getHeidelpay(marketplacePrivatekey).createBasket(maxBasket);
 
 		// create card
-		Card card = getPaymentTypeCard("4012888888881881");
+		Card card = getPaymentTypeCard("4012888888881881"); //do not change card number except error case
 		card = (Card) getHeidelpay(marketplacePrivatekey).createPaymentType(card);
 
 		// marketplace authorization
@@ -164,16 +174,24 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 		assertNotNull(authorize);
 		assertEquals(AbstractTransaction.Status.PENDING, authorize.getStatus());
 		assertEquals(participantId_2, authorize.getProcessing().getParticipantId());
+		
+		//confirm authorization
+		int redirectStatus = openNot3dsMarketPlaceRedirectUrl(authorize.getRedirectUrl().toString());
+		await().atLeast(5, SECONDS).atMost(10, SECONDS);
+		assertEquals(HttpStatus.SC_MOVED_TEMPORARILY, redirectStatus);
 
-		//full charge authorization expects error due to not yet confirm
-		try {
-			MarketplaceCharge chargeAuthorization = new MarketplaceCharge();
-			chargeAuthorization.setAmount(BigDecimal.TEN);
-			chargeAuthorization.setPaymentReference("test single marketplace authorize charge");
-			authorize.charge(chargeAuthorization);
-		} catch (PaymentException e) {
-			assertNotNull(e);
-			assertTrue(e.getUrl().endsWith(String.format("/marketplace/payments/%s/authorize/%s/charges", authorize.getPaymentId(), authorize.getId())));
-		}
+		//charge authorization
+		MarketplaceCharge chargeAuthorization = new MarketplaceCharge();
+		chargeAuthorization.setAmount(BigDecimal.TEN);
+		chargeAuthorization.setPaymentReference("test single marketplace authorize charge");
+		chargeAuthorization = authorize.charge(chargeAuthorization);
+		
+		//get payment
+		MarketplacePayment payment = getHeidelpay(marketplacePrivatekey).fetchMarketplacePayment(authorize.getPaymentId());
+		assertEquals(2, payment.getAuthorizationsList().size());
+		assertEquals(Payment.State.PARTLY, payment.getPaymentState());
+		assertEquals(2, payment.getAuthorizationsList().size());
+		assertEquals(1, payment.getChargesList().size());
+		assertEquals(chargeAuthorization.getProcessing().getUniqueId(), payment.getChargesList().get(0).getProcessing().getUniqueId());
 	}
 }

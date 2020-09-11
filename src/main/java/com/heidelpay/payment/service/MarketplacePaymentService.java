@@ -14,10 +14,8 @@ import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.json.JsonAuthorization;
 import com.heidelpay.payment.communication.json.JsonCancel;
 import com.heidelpay.payment.communication.json.JsonCharge;
-import com.heidelpay.payment.communication.json.JsonObject;
 import com.heidelpay.payment.communication.json.JsonPayment;
 import com.heidelpay.payment.communication.json.JsonTransaction;
-import com.heidelpay.payment.paymenttypes.PaymentType;
 
 public class MarketplacePaymentService extends PaymentService {
 
@@ -77,7 +75,7 @@ public class MarketplacePaymentService extends PaymentService {
 		paymentResponse.setId(paymentId);
 		paymentResponse = jsonToBusinessClassMapper.mapToBusinessObject(paymentResponse, jsonPayment);
 		paymentResponse.setCancelList(fetchCancelList(paymentResponse, getCancelsFromTransactions(jsonPayment.getTransactions())));
-		paymentResponse.setAuthorizationsList(fetchAuthorizationList(paymentResponse, jsonPayment.getTransactions()));
+		paymentResponse.setAuthorizationsList(fetchAuthorizationList(paymentResponse, getAuthorizationsFromTransactions(jsonPayment.getTransactions())));
 		paymentResponse.setChargesList(fetchChargeList(paymentResponse, getChargesFromTransactions(jsonPayment.getTransactions())));
 		return paymentResponse;
 	}
@@ -89,7 +87,7 @@ public class MarketplacePaymentService extends PaymentService {
 		JsonPayment jsonPayment = jsonParser.fromJson(response, JsonPayment.class);
 		payment = jsonToBusinessClassMapper.mapToBusinessObject(payment, jsonPayment);
 		payment.setCancelList(fetchCancelList(payment, getCancelsFromTransactions(jsonPayment.getTransactions())));
-		payment.setAuthorizationsList(fetchAuthorizationList(payment, jsonPayment.getTransactions()));
+		payment.setAuthorizationsList(fetchAuthorizationList(payment, getAuthorizationsFromTransactions(jsonPayment.getTransactions())));
 		payment.setChargesList(fetchChargeList(payment, getChargesFromTransactions(jsonPayment.getTransactions())));
 		return payment;
 	}
@@ -138,7 +136,7 @@ public class MarketplacePaymentService extends PaymentService {
 		paymentResponse.setId(paymentId);
 		paymentResponse = jsonToBusinessClassMapper.mapToBusinessObject(paymentResponse, jsonPayment);
 		paymentResponse.setCancelList(fetchCancelList(paymentResponse, getCancelsFromTransactions(jsonPayment.getTransactions())));
-		paymentResponse.setAuthorizationsList(fetchAuthorizationList(paymentResponse, jsonPayment.getTransactions()));
+		paymentResponse.setAuthorizationsList(fetchAuthorizationList(paymentResponse, getAuthorizationsFromTransactions(jsonPayment.getTransactions())));
 		paymentResponse.setChargesList(fetchChargeList(paymentResponse, getChargesFromTransactions(jsonPayment.getTransactions())));
 		return paymentResponse;
 	}
@@ -214,24 +212,5 @@ public class MarketplacePaymentService extends PaymentService {
 		}
 		return authorizationCancelList;
 
-	}
-	
-	private PaymentType createPaymentTypeWithUrl(final String url) {
-		return new PaymentType() {
-			@Override
-			public String getTypeUrl() {
-				return url;
-			}
-
-			@Override
-			public String getId() {
-				return "";
-			}
-
-			@Override
-			public PaymentType map(PaymentType paymentType, JsonObject jsonObject) {
-				return null;
-			}
-		};
 	}
 }
