@@ -52,6 +52,34 @@ public class MarketplacePaymentService extends PaymentService {
 		return charge;
 	}
 	
+	public MarketplaceCharge marketplaceChargeAuthorization(String paymentId, String authorizeId, MarketplaceCharge charge) throws HttpCommunicationException {
+		String url = urlUtil.getRestUrl().concat("/").concat(charge.getChargeAuthorizationUrl(paymentId, authorizeId));
+		String response = restCommunication.httpPost(url, heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(charge));
+		JsonCharge jsonCharge = jsonParser.fromJson(response, JsonCharge.class);
+		charge = (MarketplaceCharge) jsonToBusinessClassMapper.mapToBusinessObject(charge, jsonCharge);
+		charge.setInvoiceId(jsonCharge.getInvoiceId());
+		charge.setPayment(fetchMarketplacePayment(jsonCharge.getResources().getPaymentId()));
+		charge.setPaymentId(jsonCharge.getResources().getPaymentId());
+		charge.setHeidelpay(heidelpay);
+		return charge;
+	}
+	
+	public MarketplacePayment marketplaceFullChargeAuthorizations(String paymentId, String paymentReference) throws HttpCommunicationException {
+		MarketplaceCharge charge = new MarketplaceCharge();
+		charge.setPaymentReference(paymentReference);
+		
+		String url = urlUtil.getRestUrl().concat("/").concat(charge.getFullChargeAuthorizationsUrl(paymentId));
+		String response = restCommunication.httpPost(url, heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(charge));
+		JsonPayment jsonPayment = jsonParser.fromJson(response, JsonPayment.class);
+		MarketplacePayment paymentResponse = new MarketplacePayment(this.heidelpay);
+		paymentResponse.setId(paymentId);
+		paymentResponse = jsonToBusinessClassMapper.mapToBusinessObject(paymentResponse, jsonPayment);
+		paymentResponse.setCancelList(fetchCancelList(paymentResponse, getCancelsFromTransactions(jsonPayment.getTransactions())));
+		paymentResponse.setAuthorizationsList(fetchAuthorizationList(paymentResponse, getAuthorizationsFromTransactions(jsonPayment.getTransactions())));
+		paymentResponse.setChargesList(fetchChargeList(paymentResponse, getChargesFromTransactions(jsonPayment.getTransactions())));
+		return paymentResponse;
+	}
+	
 	public MarketplacePayment fetchMarketplacePayment(String paymentId) throws HttpCommunicationException {
 		MarketplacePayment payment = new MarketplacePayment(heidelpay);
 		payment.setId(paymentId);
@@ -59,7 +87,7 @@ public class MarketplacePaymentService extends PaymentService {
 		JsonPayment jsonPayment = jsonParser.fromJson(response, JsonPayment.class);
 		payment = jsonToBusinessClassMapper.mapToBusinessObject(payment, jsonPayment);
 		payment.setCancelList(fetchCancelList(payment, getCancelsFromTransactions(jsonPayment.getTransactions())));
-		payment.setAuthorizationsList(fetchAuthorizationList(payment, jsonPayment.getTransactions()));
+		payment.setAuthorizationsList(fetchAuthorizationList(payment, getAuthorizationsFromTransactions(jsonPayment.getTransactions())));
 		payment.setChargesList(fetchChargeList(payment, getChargesFromTransactions(jsonPayment.getTransactions())));
 		return payment;
 	}
@@ -101,14 +129,14 @@ public class MarketplacePaymentService extends PaymentService {
 		return authorization;
 	}
 	
-	public <T extends MarketplaceCancel> MarketplacePayment fullCancel(String paymentId, T cancel) throws HttpCommunicationException {
+	public <T extends MarketplaceCancel> MarketplacePayment marketplaceFullCancel(String paymentId, T cancel) throws HttpCommunicationException {
 		String response = restCommunication.httpPost(urlUtil.getPaymentUrl(cancel, paymentId), heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(cancel));
 		JsonPayment jsonPayment = jsonParser.fromJson(response, JsonPayment.class);
 		MarketplacePayment paymentResponse = new MarketplacePayment(this.heidelpay);
 		paymentResponse.setId(paymentId);
 		paymentResponse = jsonToBusinessClassMapper.mapToBusinessObject(paymentResponse, jsonPayment);
 		paymentResponse.setCancelList(fetchCancelList(paymentResponse, getCancelsFromTransactions(jsonPayment.getTransactions())));
-		paymentResponse.setAuthorizationsList(fetchAuthorizationList(paymentResponse, jsonPayment.getTransactions()));
+		paymentResponse.setAuthorizationsList(fetchAuthorizationList(paymentResponse, getAuthorizationsFromTransactions(jsonPayment.getTransactions())));
 		paymentResponse.setChargesList(fetchChargeList(paymentResponse, getChargesFromTransactions(jsonPayment.getTransactions())));
 		return paymentResponse;
 	}

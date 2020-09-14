@@ -1,5 +1,7 @@
 package com.heidelpay.payment.business;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 /*-
  * #%L
  * Heidelpay Java SDK
@@ -25,6 +27,7 @@ import static org.junit.Assert.assertNotNull;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 
+import org.apache.http.HttpStatus;
 import org.junit.Test;
 
 import com.heidelpay.payment.AbstractTransaction;
@@ -131,8 +134,8 @@ public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 
 	@Test
 	public void testMarketplaceFullAuthorizeCancel() throws MalformedURLException, HttpCommunicationException {
-		String participantId_1 = "31HA07BC814FC247577B195E59A99FC6";
-		String participantId_2 = "31HA07BC814FC247577B309FF031D3F0";
+		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
+		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;
 
 		// create basket
 		Basket maxBasket = getMaxTestBasket();
@@ -149,7 +152,7 @@ public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 		Basket basket = getHeidelpay(marketplacePrivatekey).createBasket(maxBasket);
 
 		// create card
-		Card card = getPaymentTypeCard("4012888888881881");
+		Card card = getPaymentTypeCard(NO_3DS_VISA_CARD_NUMBER); //do not change card number except error case
 		card = (Card) getHeidelpay(marketplacePrivatekey).createPaymentType(card);
 
 		// marketplace authorization
@@ -162,11 +165,19 @@ public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 		assertNotNull(authorize);
 		assertEquals(AbstractTransaction.Status.PENDING, authorize.getStatus());
 		assertEquals(participantId_2, authorize.getProcessing().getParticipantId());
+		
+		//confirm authorization
+		int redirectStatus = confirmMarketplacePendingTransaction(authorize.getRedirectUrl().toString());
+		await().atLeast(5, SECONDS).atMost(10, SECONDS);
+		assertEquals(HttpStatus.SC_MOVED_TEMPORARILY, redirectStatus);
 
 		//full cancel
 		MarketplaceCancel.FullAuthorizationCancel cancel = new MarketplaceCancel().new FullAuthorizationCancel();
 		cancel.setPaymentReference("test martketplace full cancel");
-		MarketplacePayment fullCancel = authorize.fullCancel(cancel);
-		assertNotNull(fullCancel);
+		MarketplacePayment fullCancelPayment = authorize.getPayment().fullCancel(cancel);
+		assertNotNull(fullCancelPayment);
+		assertEquals(Payment.State.CANCELED, fullCancelPayment.getPaymentState());
+		assertEquals(2, fullCancelPayment.getAuthorizationsList().size());
+		assertEquals(2, fullCancelPayment.getCancelList().size());
 	}
 }

@@ -375,7 +375,7 @@ public class Heidelpay {
 	 * Authorize call with an MarketplaceAuthorization object. The Authorization object must
 	 * have at least an amount, a currency, a typeId and basket with participantId.
 	 * 
-	 * @param authorization Authorization object
+	 * @param authorization MarketplaceAuthorization request model.
 	 * @return MarketplaceAuthorization with paymentId and authorize id in pending status.
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
@@ -620,15 +620,31 @@ public class Heidelpay {
 	}
 	
 	/**
-	 * Charge call with an MarketplaceAuthorization object. The Authorization object must
+	 * Charge call with an MarketplaceCharge object. The MarketplaceCharge object must
 	 * have at least an amount, a currency, a typeId and basket with participantId.
 	 * 
-	 * @param authorization Authorization object
-	 * @return MarketplaceAuthorization with paymentId and authorize id in pending status.
+	 * @param charge refers to a MarketplaceCharge request model.
+	 * @return MarketplaceCharge with paymentId and charge id in pending status.
+	 * 
 	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
 	 */
 	public MarketplaceCharge marketplaceCharge(MarketplaceCharge charge) throws HttpCommunicationException {
 		return marketplacePaymentService.marketplaceCharge(charge);
+	}
+	
+	/**
+	 * Charge call with MarketplaceCharge for a MarketplaceAuthorization. The MarketplaceCharge object must
+	 * have at least an amount.
+	 * 
+	 * @param paymentId refers to a MarketplacePayment id.
+	 * @param authorizeId refers to a MarketplaceAuthorization id.
+	 * @param charge refers to a MarketplaceCharge request model.
+	 * 
+	 * @return MarketplaceCharge.
+	 * @throws HttpCommunicationException in case communication to Heidelpay didn't work
+	 */
+	public MarketplaceCharge marketplaceChargeAuthorization(String paymentId, String authorizeId, MarketplaceCharge charge) throws HttpCommunicationException {
+		return marketplacePaymentService.marketplaceChargeAuthorization(paymentId, authorizeId, charge);
 	}
 
 	/**
@@ -746,14 +762,28 @@ public class Heidelpay {
 	 * Fully cancel for marketplace
 	 * <b>Note:</b>: <code>amount</code> will be ignored due to fully cancel. Only <code>paymentReference</code> is processed.
 	 * 
+	 * The cancellation type depends on the type of instance which is sub type of MarketplaceCancel. 
+	 * 
 	 * @param <T> refers sub type of MarketplaceCancel. For example: MarketplaceCancel.FullAuthorizationCancel
 	 * @param paymentId refers to the payment.
 	 * @param cancel refers to sub type of MarketplaceCancel.
-	 * @return
+	 * @return MarketplacePayment
 	 * @throws HttpCommunicationException
 	 */
-	public <T extends MarketplaceCancel> MarketplacePayment fullCancel(String paymentId, T cancel) throws HttpCommunicationException {
-		return marketplacePaymentService.fullCancel(paymentId, cancel);
+	public <T extends MarketplaceCancel> MarketplacePayment marketplaceFullCancel(String paymentId, T cancel) throws HttpCommunicationException {
+		return marketplacePaymentService.marketplaceFullCancel(paymentId, cancel);
+	}
+	
+	/**
+	 * Fully charge for marketplace authorization(s).
+	 * <b>Note:</b>: <code>amount</code> will be ignored due to fully charge. Only <code>paymentReference</code> is processed.
+	 * 
+	 * @param paymentId refers to the payment.
+	 * @return MarketplacePayment
+	 * @throws HttpCommunicationException
+	 */
+	public MarketplacePayment marketplaceFullChargeAuthorizations(String paymentId, String paymentReference) throws HttpCommunicationException {
+		return marketplacePaymentService.marketplaceFullChargeAuthorizations(paymentId, paymentReference);
 	}
 
 	/**

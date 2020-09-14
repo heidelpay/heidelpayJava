@@ -23,17 +23,6 @@ public class MarketplaceAuthorization extends AbstractTransaction<MarketplacePay
 		return "marketplace/payments/<paymentId>/authorize";
 	}
 
-	/**
-	 * Fully cancel for Marketplace Authorization
-	 * 
-	 * @param cancel refers MarketplaceCancel.FullAuthorizationCancel
-	 * @return
-	 * @throws HttpCommunicationException
-	 */
-	public MarketplacePayment fullCancel(MarketplaceCancel.FullAuthorizationCancel cancel) throws HttpCommunicationException {
-		return getHeidelpay().fullCancel(getPayment().getId(), cancel);
-	}
-
 	@Override
 	public PaymentType map(PaymentType paymentType, JsonObject jsonObject) {
 		return null;
@@ -55,5 +44,9 @@ public class MarketplaceAuthorization extends AbstractTransaction<MarketplacePay
 			}
 		}
 		return null;
+	}
+	
+	public MarketplaceCharge charge(MarketplaceCharge charge) throws HttpCommunicationException {
+		return getHeidelpay().marketplaceChargeAuthorization(this.getPaymentId(), this.getId(), charge);
 	}
 }

@@ -1,5 +1,7 @@
 package com.heidelpay.payment.business;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 /*-
  * #%L
  * Heidelpay Java SDK
@@ -27,6 +29,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Currency;
 
+import org.apache.http.HttpStatus;
 import org.junit.Test;
 
 import com.heidelpay.payment.AbstractTransaction;
@@ -37,7 +40,6 @@ import com.heidelpay.payment.MarketplaceCancel;
 import com.heidelpay.payment.MarketplaceCharge;
 import com.heidelpay.payment.MarketplacePayment;
 import com.heidelpay.payment.Payment;
-import com.heidelpay.payment.MarketplaceCancel.FullAuthorizationCancel;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.paymenttypes.Card;
 
@@ -124,8 +126,8 @@ public class CancelAfterChargeTest extends AbstractPaymentTest {
 
 	@Test
 	public void testMarketplaceFullCancelChargeWithCard() throws MalformedURLException, HttpCommunicationException {
-		String participantId_1 = "31HA07BC814FC247577B195E59A99FC6";
-		String participantId_2 = "31HA07BC814FC247577B309FF031D3F0";
+		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
+		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;
 		
 		//create basket
 		Basket maxBasket = getMaxTestBasket();
@@ -142,7 +144,7 @@ public class CancelAfterChargeTest extends AbstractPaymentTest {
 		Basket basket = getHeidelpay(marketplacePrivatekey).createBasket(maxBasket);	
 		
 		//create card
-		Card card = getPaymentTypeCard("4012888888881881");
+		Card card = getPaymentTypeCard(NO_3DS_VISA_CARD_NUMBER); //do not change card number except error case
 		card = (Card)getHeidelpay(marketplacePrivatekey).createPaymentType(card);
 		
 		//marketplace charge
@@ -160,13 +162,21 @@ public class CancelAfterChargeTest extends AbstractPaymentTest {
 		assertNotNull(payment);
 		assertNotNull(payment.getId());
 		assertNotNull(payment.getAuthorizationsList());
-		assertEquals(1, payment.getAuthorizationsList().size());
+		assertEquals(1, payment.getChargesList().size());
 		assertEquals(Payment.State.PENDING, payment.getPaymentState());
+		
+		//confirm authorization
+		int redirectStatus = confirmMarketplacePendingTransaction(charge.getRedirectUrl().toString());
+		await().atLeast(3, SECONDS).atMost(10, SECONDS);
+		assertEquals(HttpStatus.SC_MOVED_TEMPORARILY, redirectStatus);
 		
 		//full cancel
 		MarketplaceCancel.FullChargeCancel cancel = new MarketplaceCancel().new FullChargeCancel();
 		cancel.setPaymentReference("test martketplace full cancel");
-		MarketplacePayment fullCancel = charge.fullCancel(cancel);
-		assertNotNull(fullCancel);
+		MarketplacePayment fullCancelPayment = charge.getPayment().fullCancel(cancel);
+		assertNotNull(fullCancelPayment);
+		assertEquals(Payment.State.CANCELED, fullCancelPayment.getPaymentState());
+		assertEquals(2, fullCancelPayment.getChargesList().size());
+		assertEquals(2, fullCancelPayment.getCancelList().size());
 	}
 }

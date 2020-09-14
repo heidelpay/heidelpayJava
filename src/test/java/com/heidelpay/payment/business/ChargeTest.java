@@ -33,6 +33,7 @@ import java.util.Currency;
 import org.junit.Test;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.heidelpay.payment.AbstractTransaction;
 import com.heidelpay.payment.Basket;
 import com.heidelpay.payment.Charge;
@@ -41,6 +42,7 @@ import com.heidelpay.payment.MarketplaceCharge;
 import com.heidelpay.payment.MarketplacePayment;
 import com.heidelpay.payment.Payment;
 import com.heidelpay.payment.communication.HttpCommunicationException;
+import com.heidelpay.payment.communication.JsonFieldIgnoreStragegy;
 import com.heidelpay.payment.paymenttypes.Card;
 import com.heidelpay.payment.paymenttypes.SepaDirectDebit;
 import com.heidelpay.payment.paymenttypes.Sofort;
@@ -229,7 +231,10 @@ public class ChargeTest extends AbstractPaymentTest {
 	@Test
 	public void testChargeObjectIsParsableWithGson() throws HttpCommunicationException, MalformedURLException {
 		Charge charge = getHeidelpay().charge(BigDecimal.ONE, Currency.getInstance("EUR"), createPaymentTypeCard().getId(), new URL("https://integration.splitit.com//gateways/Proxy/Execute?publicToken=9e517919-9e3d-4d5f-825e-99f7712eefd1"), false);
-		assertEquals(String.class, new Gson().toJson(charge).getClass());
+		assertEquals(String.class, new GsonBuilder()
+				.addSerializationExclusionStrategy(new JsonFieldIgnoreStragegy())
+				.create()
+				.toJson(charge).getClass());
 	}
 	
 	@Test
@@ -252,7 +257,7 @@ public class ChargeTest extends AbstractPaymentTest {
 		Basket basket = getHeidelpay(marketplacePrivatekey).createBasket(maxBasket);	
 		
 		//create card
-		Card card = getPaymentTypeCard("4012888888881881");
+		Card card = getPaymentTypeCard("4012888888881881"); //do not change card number except error case
 		card = (Card)getHeidelpay(marketplacePrivatekey).createPaymentType(card);
 		
 		//marketplace charge
@@ -317,8 +322,8 @@ public class ChargeTest extends AbstractPaymentTest {
 	
 	@Test
 	public void testMarketplaceChargeWithSofort() throws MalformedURLException, HttpCommunicationException {
-		String participantId_1 = "31HA07BC814FC247577B195E59A99FC6";
-		String participantId_2 = "31HA07BC814FC247577B309FF031D3F0";
+		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
+		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;
 		
 		//create basket
 		Basket maxBasket = getMaxTestBasket();
