@@ -25,15 +25,12 @@ import static org.awaitility.Awaitility.await;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -76,6 +73,10 @@ import com.heidelpay.payment.paymenttypes.SepaDirectDebit;
 import com.heidelpay.payment.service.PropertiesUtil;
 
 public abstract class AbstractPaymentTest {
+	
+	protected static final String NO_3DS_VISA_CARD_NUMBER = "4012888888881881";
+	protected static final String MARKETPLACE_PARTICIPANT_ID_2 = "31HA07BC814FC247577B309FF031D3F0";
+	protected static final String MARKETPLACE_PARTICIPANT_ID_1 = "31HA07BC814FC247577B195E59A99FC6";
 	
 	private final PropertiesUtil properties = new PropertiesUtil();
 

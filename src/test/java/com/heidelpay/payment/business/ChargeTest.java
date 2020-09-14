@@ -322,8 +322,8 @@ public class ChargeTest extends AbstractPaymentTest {
 	
 	@Test
 	public void testMarketplaceChargeWithSofort() throws MalformedURLException, HttpCommunicationException {
-		String participantId_1 = "31HA07BC814FC247577B195E59A99FC6";
-		String participantId_2 = "31HA07BC814FC247577B309FF031D3F0";
+		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
+		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;
 		
 		//create basket
 		Basket maxBasket = getMaxTestBasket();

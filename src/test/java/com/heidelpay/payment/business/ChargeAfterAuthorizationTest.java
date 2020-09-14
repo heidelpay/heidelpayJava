@@ -91,8 +91,8 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 	
 	@Test
 	public void testMarketplaceFullAuthorizeCharge() throws MalformedURLException, HttpCommunicationException {
-		String participantId_1 = "31HA07BC814FC247577B195E59A99FC6";
-		String participantId_2 = "31HA07BC814FC247577B309FF031D3F0";
+		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
+		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;
 
 		// create basket
 		Basket maxBasket = getMaxTestBasket();
@@ -109,7 +109,7 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 		Basket basket = getHeidelpay(marketplacePrivatekey).createBasket(maxBasket);
 
 		// create card
-		Card card = getPaymentTypeCard("4012888888881881"); //do not change card number except error case
+		Card card = getPaymentTypeCard(NO_3DS_VISA_CARD_NUMBER); //do not change card number except error case
 		card = (Card) getHeidelpay(marketplacePrivatekey).createPaymentType(card);
 
 		// marketplace authorization
@@ -143,8 +143,8 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 	
 	@Test
 	public void testMarketplaceAuthorizeCharge() throws MalformedURLException, HttpCommunicationException {
-		String participantId_1 = "31HA07BC814FC247577B195E59A99FC6";
-		String participantId_2 = "31HA07BC814FC247577B309FF031D3F0";
+		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
+		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;
 
 		// create basket
 		Basket maxBasket = getMaxTestBasket();
@@ -161,7 +161,7 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 		Basket basket = getHeidelpay(marketplacePrivatekey).createBasket(maxBasket);
 
 		// create card
-		Card card = getPaymentTypeCard("4012888888881881"); //do not change card number except error case
+		Card card = getPaymentTypeCard(NO_3DS_VISA_CARD_NUMBER); //do not change card number except error case
 		card = (Card) getHeidelpay(marketplacePrivatekey).createPaymentType(card);
 
 		// marketplace authorization
