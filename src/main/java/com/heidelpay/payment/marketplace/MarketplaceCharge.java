@@ -1,8 +1,10 @@
-package com.heidelpay.payment;
+package com.heidelpay.payment.marketplace;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.heidelpay.payment.AbstractTransaction;
+import com.heidelpay.payment.Heidelpay;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.json.JsonObject;
 import com.heidelpay.payment.paymenttypes.PaymentType;
@@ -29,12 +31,16 @@ public class MarketplaceCharge extends AbstractTransaction<MarketplacePayment> {
 	
 	/**
 	 * Fully cancel for Marketplace Charge
+	 * <b>Note:</b>: <code>amount</code> will be ignored due to fully cancel. Only <code>paymentReference</code> is processed.
+	 * 
 	 * @param cancel refers to MarketplaceCancel.FullChargeCancel
 	 * @return
 	 * @throws HttpCommunicationException
 	 */
-	public MarketplacePayment fullCancel(MarketplaceCancel.FullChargeCancel cancel) throws HttpCommunicationException {		
-		return getHeidelpay().fullCancel(getPayment().getId(), cancel);
+	public MarketplacePayment fullCancel(String paymentReference) throws HttpCommunicationException {
+		MarketplaceCancel cancel = new MarketplaceCancel();
+		cancel.setPaymentReference(paymentReference);
+		return getHeidelpay().marketplaceFullChargesCancel(getPayment().getId(), cancel);
 	}
 
 

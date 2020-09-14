@@ -31,11 +31,10 @@ import com.heidelpay.payment.AbstractTransaction;
 import com.heidelpay.payment.Authorization;
 import com.heidelpay.payment.Basket;
 import com.heidelpay.payment.Cancel;
-import com.heidelpay.payment.MarketplaceAuthorization;
-import com.heidelpay.payment.MarketplaceCancel;
-import com.heidelpay.payment.MarketplacePayment;
 import com.heidelpay.payment.Payment;
 import com.heidelpay.payment.communication.HttpCommunicationException;
+import com.heidelpay.payment.marketplace.MarketplaceAuthorization;
+import com.heidelpay.payment.marketplace.MarketplacePayment;
 import com.heidelpay.payment.paymenttypes.Card;
 
 public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
@@ -164,9 +163,7 @@ public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 		assertEquals(participantId_2, authorize.getProcessing().getParticipantId());
 
 		//full cancel
-		MarketplaceCancel.FullAuthorizationCancel cancel = new MarketplaceCancel().new FullAuthorizationCancel();
-		cancel.setPaymentReference("test martketplace full cancel");
-		MarketplacePayment fullCancel = authorize.fullCancel(cancel);
+		MarketplacePayment fullCancel = authorize.fullCancel("test martketplace full cancel");
 		assertNotNull(fullCancel);
 	}
 }

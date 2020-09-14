@@ -32,12 +32,16 @@ import com.heidelpay.payment.business.paymenttypes.InstallmentSecuredRatePlan;
 import com.heidelpay.payment.communication.HeidelpayRestCommunication;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.impl.HttpClientBasedRestCommunication;
+import com.heidelpay.payment.marketplace.MarketplaceAuthorization;
+import com.heidelpay.payment.marketplace.MarketplaceCancel;
+import com.heidelpay.payment.marketplace.MarketplaceCharge;
+import com.heidelpay.payment.marketplace.MarketplacePayment;
 import com.heidelpay.payment.paymenttypes.PaymentType;
 import com.heidelpay.payment.service.LinkpayService;
-import com.heidelpay.payment.service.MarketplacePaymentService;
 import com.heidelpay.payment.service.PaymentService;
 import com.heidelpay.payment.service.PaypageService;
 import com.heidelpay.payment.service.WebhookService;
+import com.heidelpay.payment.service.marketplace.MarketplacePaymentService;
 import com.heidelpay.payment.webhook.Webhook;
 import com.heidelpay.payment.webhook.WebhookList;
 
@@ -743,17 +747,33 @@ public class Heidelpay {
 	}
 	
 	/**
-	 * Fully cancel for marketplace
+	 * Fully cancel for marketplace authorization(s). Cancel a list of authorization(s).
+	 * <br>
+	 * Number of authorization(s) depends on count of unique participantId(s) in Basket request.
 	 * <b>Note:</b>: <code>amount</code> will be ignored due to fully cancel. Only <code>paymentReference</code> is processed.
 	 * 
-	 * @param <T> refers sub type of MarketplaceCancel. For example: MarketplaceCancel.FullAuthorizationCancel
 	 * @param paymentId refers to the payment.
 	 * @param cancel refers to sub type of MarketplaceCancel.
 	 * @return
 	 * @throws HttpCommunicationException
 	 */
-	public <T extends MarketplaceCancel> MarketplacePayment fullCancel(String paymentId, T cancel) throws HttpCommunicationException {
-		return marketplacePaymentService.fullCancel(paymentId, cancel);
+	public MarketplacePayment marketplaceFullAuthorizeCancel(String paymentId, MarketplaceCancel cancel) throws HttpCommunicationException {
+		return marketplacePaymentService.marketplaceFullAuthorizeCancel(paymentId, cancel);
+	}
+	
+	/**
+	 * Fully cancel for marketplace charge(s). Cancel a list of charge(s).
+	 * <br>
+	 * Number of charge(s) depends on count of unique participantId(s) in Basket request.
+	 * <b>Note:</b>: <code>amount</code> will be ignored due to fully cancel. Only <code>paymentReference</code> is processed.
+	 * 
+	 * @param paymentId refers to the payment.
+	 * @param cancel refers to sub type of MarketplaceCancel.
+	 * @return
+	 * @throws HttpCommunicationException
+	 */
+	public MarketplacePayment marketplaceFullChargesCancel(String paymentId, MarketplaceCancel cancel) throws HttpCommunicationException {
+		return marketplacePaymentService.marketplaceFullChargesCancel(paymentId, cancel);
 	}
 
 	/**

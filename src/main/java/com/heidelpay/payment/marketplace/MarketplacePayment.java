@@ -1,7 +1,9 @@
-package com.heidelpay.payment;
+package com.heidelpay.payment.marketplace;
 
 import java.util.List;
 
+import com.heidelpay.payment.AbstractPayment;
+import com.heidelpay.payment.Heidelpay;
 import com.heidelpay.payment.communication.json.JsonObject;
 import com.heidelpay.payment.paymenttypes.PaymentType;
 

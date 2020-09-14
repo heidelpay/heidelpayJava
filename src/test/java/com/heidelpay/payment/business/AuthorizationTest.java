@@ -35,10 +35,10 @@ import com.heidelpay.payment.AbstractTransaction;
 import com.heidelpay.payment.Authorization;
 import com.heidelpay.payment.Basket;
 import com.heidelpay.payment.Customer;
-import com.heidelpay.payment.MarketplaceAuthorization;
-import com.heidelpay.payment.MarketplacePayment;
 import com.heidelpay.payment.Payment;
 import com.heidelpay.payment.communication.HttpCommunicationException;
+import com.heidelpay.payment.marketplace.MarketplaceAuthorization;
+import com.heidelpay.payment.marketplace.MarketplacePayment;
 import com.heidelpay.payment.paymenttypes.Card;
 
 public class AuthorizationTest extends AbstractPaymentTest {

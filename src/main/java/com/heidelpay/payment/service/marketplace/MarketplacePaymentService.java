@@ -1,14 +1,10 @@
-package com.heidelpay.payment.service;
+package com.heidelpay.payment.service.marketplace;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.heidelpay.payment.Heidelpay;
-import com.heidelpay.payment.MarketplaceAuthorization;
-import com.heidelpay.payment.MarketplaceCancel;
-import com.heidelpay.payment.MarketplaceCharge;
-import com.heidelpay.payment.MarketplacePayment;
 import com.heidelpay.payment.communication.HeidelpayRestCommunication;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.json.JsonAuthorization;
@@ -16,6 +12,11 @@ import com.heidelpay.payment.communication.json.JsonCancel;
 import com.heidelpay.payment.communication.json.JsonCharge;
 import com.heidelpay.payment.communication.json.JsonPayment;
 import com.heidelpay.payment.communication.json.JsonTransaction;
+import com.heidelpay.payment.marketplace.MarketplaceAuthorization;
+import com.heidelpay.payment.marketplace.MarketplaceCancel;
+import com.heidelpay.payment.marketplace.MarketplaceCharge;
+import com.heidelpay.payment.marketplace.MarketplacePayment;
+import com.heidelpay.payment.service.PaymentService;
 
 public class MarketplacePaymentService extends PaymentService {
 
@@ -26,10 +27,8 @@ public class MarketplacePaymentService extends PaymentService {
 	/**
 	 * Execute an marketplace authorization.
 	 * 
-	 * @param authorization refers to normal authorization request.
-	 * 
-	 * @return Authorization refers to an authorization response with id, paymentId, etc.
-	 * 
+	 * @param authorization refers to marketplace authorization request.
+	 * @return MarketplaceAuthorization refers to an authorization response with id, paymentId, etc.
 	 * @throws HttpCommunicationException
 	 */
 	public MarketplaceAuthorization marketplaceAuthorize(MarketplaceAuthorization authorization) throws HttpCommunicationException {
@@ -101,8 +100,23 @@ public class MarketplacePaymentService extends PaymentService {
 		return authorization;
 	}
 	
-	public <T extends MarketplaceCancel> MarketplacePayment fullCancel(String paymentId, T cancel) throws HttpCommunicationException {
-		String response = restCommunication.httpPost(urlUtil.getPaymentUrl(cancel, paymentId), heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(cancel));
+	public MarketplacePayment marketplaceFullAuthorizeCancel(String paymentId, MarketplaceCancel cancel) throws HttpCommunicationException {
+		String url = urlUtil.getRestUrl().concat("/").concat(cancel.getFullAuthorizeCancelUrl(paymentId));
+		return  fullCancel(paymentId, url, cancel);
+	}
+	
+	public MarketplacePayment marketplaceFullChargesCancel(String paymentId, MarketplaceCancel cancel) throws HttpCommunicationException {
+		String url = urlUtil.getRestUrl().concat("/").concat(cancel.getFullChargesCancelUrl(paymentId));
+		return  fullCancel(paymentId, url, cancel);
+	}
+	
+	public MarketplaceCancel marketplaceAuthorizeCancel(String paymentId, String authorizeId, MarketplaceCancel cancel) throws HttpCommunicationException {
+		String url = urlUtil.getRestUrl().concat("/").concat(cancel.getPartialAuthorizeCancelUrl(paymentId, authorizeId));
+		return  marketpalceCancel(paymentId, url, cancel);
+	}
+	
+	private MarketplacePayment fullCancel(String paymentId, String url, MarketplaceCancel cancel) throws HttpCommunicationException {
+		String response = restCommunication.httpPost(url, heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(cancel));
 		JsonPayment jsonPayment = jsonParser.fromJson(response, JsonPayment.class);
 		MarketplacePayment paymentResponse = new MarketplacePayment(this.heidelpay);
 		paymentResponse.setId(paymentId);
@@ -111,6 +125,15 @@ public class MarketplacePaymentService extends PaymentService {
 		paymentResponse.setAuthorizationsList(fetchAuthorizationList(paymentResponse, jsonPayment.getTransactions()));
 		paymentResponse.setChargesList(fetchChargeList(paymentResponse, getChargesFromTransactions(jsonPayment.getTransactions())));
 		return paymentResponse;
+	}
+	
+	private MarketplaceCancel marketpalceCancel(String paymentId, String url, MarketplaceCancel cancel) throws HttpCommunicationException {
+		String response = restCommunication.httpPost(url, heidelpay.getPrivateKey(), jsonToBusinessClassMapper.map(cancel));
+		JsonCancel jsonCancel = jsonParser.fromJson(response, JsonCancel.class);
+		cancel = (MarketplaceCancel)jsonToBusinessClassMapper.mapToBusinessObject(cancel, jsonCancel);
+		cancel.setPayment(fetchMarketplacePayment(paymentId));
+		cancel.setHeidelpay(heidelpay);
+		return cancel;
 	}
 	
 	private List<MarketplaceAuthorization> fetchAuthorizationList(MarketplacePayment payment, List<JsonTransaction> jsonTransaction) throws HttpCommunicationException {
