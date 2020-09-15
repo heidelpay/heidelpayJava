@@ -1,8 +1,11 @@
-package com.heidelpay.payment;
+package com.heidelpay.payment.marketplace;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.heidelpay.payment.AbstractTransaction;
+import com.heidelpay.payment.Heidelpay;
+import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.json.JsonObject;
 import com.heidelpay.payment.paymenttypes.PaymentType;
 
@@ -60,5 +63,16 @@ public class MarketplaceCharge extends AbstractTransaction<MarketplacePayment> {
 
 	public void setCancelList(List<MarketplaceCancel> cancelList) {
 		this.cancelList = cancelList;
+	}
+	
+	/**
+	 * Cancel for this charge.
+	 * 
+	 * @param cancel refers to MarketplaceCancel.
+	 * @return MarketplaceCancel
+	 * @throws HttpCommunicationException
+	 */
+	public MarketplaceCancel cancel(MarketplaceCancel cancel) throws HttpCommunicationException {
+		return getHeidelpay().marketplaceChargeCancel(this.getPaymentId(), this.getId(), cancel);
 	}
 }

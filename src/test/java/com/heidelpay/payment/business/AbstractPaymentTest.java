@@ -35,8 +35,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -59,13 +61,15 @@ import com.heidelpay.payment.Customer;
 import com.heidelpay.payment.Customer.Salutation;
 import com.heidelpay.payment.CustomerCompanyData;
 import com.heidelpay.payment.Heidelpay;
-import com.heidelpay.payment.MarketplaceAuthorization;
-import com.heidelpay.payment.MarketplaceCharge;
 import com.heidelpay.payment.Metadata;
 import com.heidelpay.payment.PaymentException;
 import com.heidelpay.payment.Processing;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.impl.HttpClientBasedRestCommunication;
+import com.heidelpay.payment.marketplace.MarketplaceAuthorization;
+import com.heidelpay.payment.marketplace.MarketplaceCancelBasket;
+import com.heidelpay.payment.marketplace.MarketplaceCancelBasketItem;
+import com.heidelpay.payment.marketplace.MarketplaceCharge;
 import com.heidelpay.payment.paymenttypes.Card;
 import com.heidelpay.payment.paymenttypes.InvoiceGuaranteed;
 import com.heidelpay.payment.paymenttypes.InvoiceSecured;
@@ -619,7 +623,7 @@ public abstract class AbstractPaymentTest {
 
 	protected int confirmMarketplacePendingTransaction(String redirectUrl) {
 		try {
-			HttpClient httpClient = HttpClients.createDefault();
+			HttpClient httpClient = HttpClients.custom().useSystemProperties().build();
 			HttpResponse response = httpClient.execute(new HttpGet(redirectUrl));
 			
 			Document html = Jsoup.parse(readHtml(response.getEntity().getContent()));
@@ -650,5 +654,23 @@ public abstract class AbstractPaymentTest {
 			e.printStackTrace();
 			return "";
 		}
+	}
+	
+	protected MarketplaceCancelBasket buildCancelBasketByParticipant(List<BasketItem> basketItems, String participantId) {
+		MarketplaceCancelBasket cancelBasket = new MarketplaceCancelBasket();
+		
+		List<MarketplaceCancelBasketItem> cancelBasketItems = new ArrayList<MarketplaceCancelBasketItem>();
+		for(BasketItem basketItem : basketItems) {
+			if(participantId.equals(basketItem.getParticipantId())) {
+				MarketplaceCancelBasketItem cancelBasketItem = new MarketplaceCancelBasketItem();
+				cancelBasketItem.setParticipantId(basketItem.getParticipantId());
+				cancelBasketItem.setQuantity(basketItem.getQuantity());
+				cancelBasketItem.setBasketItemReferenceId(basketItem.getBasketItemReferenceId());
+				cancelBasketItem.setAmountGross(basketItem.getAmountGross());
+				cancelBasketItems.add(cancelBasketItem);
+			}
+		}
+		cancelBasket.setItems(cancelBasketItems);
+		return cancelBasket;
 	}
 }

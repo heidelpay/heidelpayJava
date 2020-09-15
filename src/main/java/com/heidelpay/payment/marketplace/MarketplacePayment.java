@@ -1,7 +1,9 @@
-package com.heidelpay.payment;
+package com.heidelpay.payment.marketplace;
 
 import java.util.List;
 
+import com.heidelpay.payment.AbstractPayment;
+import com.heidelpay.payment.Heidelpay;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.json.JsonObject;
 import com.heidelpay.payment.paymenttypes.PaymentType;
@@ -96,15 +98,31 @@ public class MarketplacePayment extends AbstractPayment {
 	}
 	
 	/**
-	 * Fully cancel for Marketplace Charge(s) or Authorization(s).
+	 * Fully cancel for Marketplace Authorization(s).
 	 * <b>Note:</b>: <code>amount</code> will be ignored due to fully cancel. Only <code>paymentReference</code> is processed.
 	 * 
 	 * @param cancel must refer to sub type of MarketplaceCancel
 	 * @return MarketplacePayment
 	 * @throws HttpCommunicationException
 	 */
-	public MarketplacePayment fullCancel(MarketplaceCancel cancel) throws HttpCommunicationException {
-		return getHeidelpay().marketplaceFullCancel(this.getId(), cancel);
+	public MarketplacePayment marketplaceFullAuthorizeCancel(String paymentReference) throws HttpCommunicationException {
+		MarketplaceCancel cancel = new MarketplaceCancel();
+		cancel.setPaymentReference(paymentReference);
+		return getHeidelpay().marketplaceFullAuthorizationsCancel(this.getId(), cancel);
+	}
+	
+	/**
+	 * Fully cancel for Marketplace Charge(s).
+	 * <b>Note:</b>: <code>amount</code> will be ignored due to fully cancel. Only <code>paymentReference</code> is processed.
+	 * 
+	 * @param cancel must refer to sub type of MarketplaceCancel
+	 * @return MarketplacePayment
+	 * @throws HttpCommunicationException
+	 */
+	public MarketplacePayment marketplaceFullChargesCancel(String paymentReference) throws HttpCommunicationException {
+		MarketplaceCancel cancel = new MarketplaceCancel();
+		cancel.setPaymentReference(paymentReference);
+		return getHeidelpay().marketplaceFullChargesCancel(this.getId(), cancel);
 	}
 	
 	/**

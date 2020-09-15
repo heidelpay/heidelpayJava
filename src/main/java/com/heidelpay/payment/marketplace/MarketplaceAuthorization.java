@@ -1,7 +1,9 @@
-package com.heidelpay.payment;
+package com.heidelpay.payment.marketplace;
 
 import java.util.List;
 
+import com.heidelpay.payment.AbstractTransaction;
+import com.heidelpay.payment.Heidelpay;
 import com.heidelpay.payment.communication.HttpCommunicationException;
 import com.heidelpay.payment.communication.json.JsonObject;
 import com.heidelpay.payment.paymenttypes.PaymentType;
@@ -48,5 +50,16 @@ public class MarketplaceAuthorization extends AbstractTransaction<MarketplacePay
 	
 	public MarketplaceCharge charge(MarketplaceCharge charge) throws HttpCommunicationException {
 		return getHeidelpay().marketplaceChargeAuthorization(this.getPaymentId(), this.getId(), charge);
+	}
+	
+	/**
+	 * Cancel for this authorization.
+	 * 
+	 * @param cancel refers to MarketplaceCancel.
+	 * @return MarketplaceCancel
+	 * @throws HttpCommunicationException
+	 */
+	public MarketplaceCancel cancel(MarketplaceCancel cancel) throws HttpCommunicationException {
+		return getHeidelpay().marketplaceAuthorizationCancel(this.getPaymentId(), this.getId(), cancel);
 	}
 }
