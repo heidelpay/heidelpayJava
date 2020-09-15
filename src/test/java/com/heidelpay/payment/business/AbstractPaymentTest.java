@@ -623,7 +623,7 @@ public abstract class AbstractPaymentTest {
 
 	protected int confirmMarketplacePendingTransaction(String redirectUrl) {
 		try {
-			HttpClient httpClient = HttpClients.createDefault();
+			HttpClient httpClient = HttpClients.custom().useSystemProperties().build();
 			HttpResponse response = httpClient.execute(new HttpGet(redirectUrl));
 			
 			Document html = Jsoup.parse(readHtml(response.getEntity().getContent()));
