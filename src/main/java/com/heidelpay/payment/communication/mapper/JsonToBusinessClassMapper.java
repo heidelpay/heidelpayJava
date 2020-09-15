@@ -9,7 +9,6 @@ import com.heidelpay.payment.CommercialSector;
 import com.heidelpay.payment.Customer;
 import com.heidelpay.payment.CustomerCompanyData;
 import com.heidelpay.payment.Linkpay;
-import com.heidelpay.payment.MarketplaceCancel;
 import com.heidelpay.payment.Payout;
 import com.heidelpay.payment.Paypage;
 import com.heidelpay.payment.Processing;
@@ -32,6 +31,7 @@ import com.heidelpay.payment.communication.json.JsonRecurring;
 import com.heidelpay.payment.communication.json.JsonResources;
 import com.heidelpay.payment.communication.json.JsonShipment;
 import com.heidelpay.payment.communication.json.JsonState;
+import com.heidelpay.payment.marketplace.MarketplaceCancel;
 import com.heidelpay.payment.paymenttypes.PaymentType;
 
 /*-
@@ -92,9 +92,10 @@ public class JsonToBusinessClassMapper {
 		return json;
 	}
 
-	public <T extends MarketplaceCancel> JsonObject map(T cancel) {
+	public JsonObject map(MarketplaceCancel cancel) {
 		JsonCancel json = new JsonCancel();
 		json.setPaymentReference(cancel.getPaymentReference());
+		json.setCanceledBasket(cancel.getCanceledBasket());
 		return json;
 	}
 
