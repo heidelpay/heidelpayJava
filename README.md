@@ -1,6 +1,9 @@
 # heidelpayJava
 Official heidelpay Java Payment SDK
 
+## Deprecated Repository
+**This repository will be replaced by [Unzer Java SDK](https://github.com/unzerdev/java-sdk) please refer to the [Migration Guide](https://docs.unzer.com/docs/migration-to-the-new-unzer-java-sdk) to migrate to the new SDK.**
+
 ## Requirements
 
 Java 1.6 or later.
