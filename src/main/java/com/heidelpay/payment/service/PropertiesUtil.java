@@ -47,8 +47,11 @@ public class PropertiesUtil {
 			loadedProperties.load(this.getClass().getResourceAsStream("/heidelpay.properties"));
 			this.properties = loadedProperties;
 
-			loadedProperties.load(this.getClass().getResourceAsStream("/test-keys.properties"));
-			this.properties.putAll(loadedProperties);
+			this.properties.put(PUBLIC_KEY1, System.getProperty(PUBLIC_KEY1));
+			this.properties.put(PRIVATE_KEY1, System.getProperty(PRIVATE_KEY1));
+			this.properties.put(PRIVATE_KEY2, System.getProperty(PRIVATE_KEY2));
+			this.properties.put(PRIVATE_KEY3, System.getProperty(PRIVATE_KEY3));
+			this.properties.put(MARKETPLACE_PRIVATE_KEY, System.getProperty(MARKETPLACE_PRIVATE_KEY));
 		} catch (IOException e) {
 			logger.error("Error loading heidelpay.properties from Classpath: %s", e.getMessage());
 			throw new PropertiesException("Error loading heidelpay.properties from Classpath: " + e.getMessage());
