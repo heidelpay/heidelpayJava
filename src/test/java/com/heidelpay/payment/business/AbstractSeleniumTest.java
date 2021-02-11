@@ -245,7 +245,7 @@ public abstract class AbstractSeleniumTest extends AbstractPaymentTest {
 		paypage.setPrivacyPolicyUrl(new URL("https://www.heidelpay.com/en/privacy-statement/"));
 		paypage.setCss(getCssMap());
 
-		paypage.setLogoImage("https://www.heidelpay.com/typo3conf/ext/heidelpay_site/Resources/Public/Images/Heidelpay-Logo_mitUnterzeile-orange.svg");
+		paypage.setLogoImage("https://camo.githubusercontent.com/9f91b59f64690f5e6c710e7281808988f675eb8e62cf5740c91afc2616c76247/68747470733a2f2f6465762e756e7a65722e636f6d2f77702d636f6e74656e742f75706c6f6164732f323032302f30392f556e7a65725f5f5072696d6172794c6f676f5f5261737062657272795f5247422e706e67");
 		paypage.setFullPageImage("https://www.heidelpay.com/fileadmin/content/header-Imges-neu/Header_Phone_12.jpg");
 
 		paypage.setContactUrl(new URL("mailto:rene.felder@heidelpay.com"));
@@ -273,7 +273,7 @@ public abstract class AbstractSeleniumTest extends AbstractPaymentTest {
 		linkpay.setPrivacyPolicyUrl(new URL("https://www.heidelpay.com/en/privacy-statement/"));
 		linkpay.setCss(getCssMap());
 
-		linkpay.setLogoImage("https://www.heidelpay.com/typo3conf/ext/heidelpay_site/Resources/Public/Images/Heidelpay-Logo_mitUnterzeile-orange.svg");
+		linkpay.setLogoImage("https://camo.githubusercontent.com/9f91b59f64690f5e6c710e7281808988f675eb8e62cf5740c91afc2616c76247/68747470733a2f2f6465762e756e7a65722e636f6d2f77702d636f6e74656e742f75706c6f6164732f323032302f30392f556e7a65725f5f5072696d6172794c6f676f5f5261737062657272795f5247422e706e67");
 		linkpay.setFullPageImage("https://www.heidelpay.com/fileadmin/content/header-Imges-neu/Header_Phone_12.jpg");
 
 		linkpay.setContactUrl(new URL("mailto:rene.felder@heidelpay.com"));

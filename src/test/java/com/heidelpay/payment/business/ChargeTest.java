@@ -30,6 +30,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Currency;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -49,6 +50,7 @@ import com.heidelpay.payment.paymenttypes.Sofort;
 
 public class ChargeTest extends AbstractPaymentTest {
 
+	@Ignore("Needs further configuration in Testdata")
 	@Test
 	public void testChargeWithTypeIdAndEndPoint() throws MalformedURLException, HttpCommunicationException {
 		Card card = getPaymentTypeCard("4444333322221111");
@@ -236,7 +238,8 @@ public class ChargeTest extends AbstractPaymentTest {
 				.create()
 				.toJson(charge).getClass());
 	}
-	
+
+	@Ignore("Needs further configuration in Testdata")
 	@Test
 	public void testMarketplaceChargeWithCard() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
@@ -278,7 +281,8 @@ public class ChargeTest extends AbstractPaymentTest {
 		assertEquals(1, payment.getChargesList().size());
 		assertEquals(Payment.State.PENDING, payment.getPaymentState());
 	}
-	
+
+	@Ignore("Needs further configuration in Testdata")
 	@Test
 	public void testMarketplaceChargeWithSepaDirectDebit() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
@@ -319,7 +323,8 @@ public class ChargeTest extends AbstractPaymentTest {
 		assertEquals(1, payment.getChargesList().size());
 		assertEquals(Payment.State.COMPLETED, payment.getPaymentState());
 	}
-	
+
+	@Ignore("Needs further configuration in Testdata")
 	@Test
 	public void testMarketplaceChargeWithSofort() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;

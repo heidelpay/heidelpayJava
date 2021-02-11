@@ -582,7 +582,7 @@ public abstract class AbstractPaymentTest {
 		basketItem.setSubTitle("XS in Red");
 		basketItem.setType("goods");
 		try {
-			basketItem.setImageUrl(new URL("https://www.apple.com/v/iphone-xs/d/images/overview/hero_top_device_large_2x.jpg"));
+			basketItem.setImageUrl(new URL("https://camo.githubusercontent.com/9f91b59f64690f5e6c710e7281808988f675eb8e62cf5740c91afc2616c76247/68747470733a2f2f6465762e756e7a65722e636f6d2f77702d636f6e74656e742f75706c6f6164732f323032302f30392f556e7a65725f5f5072696d6172794c6f676f5f5261737062657272795f5247422e706e67"));
 		} catch (MalformedURLException e) {
 		}
 		return basketItem;
@@ -603,7 +603,7 @@ public abstract class AbstractPaymentTest {
 		basketItem.setSubTitle("Nicht nur Pros brauchen Power.");
 		basketItem.setType("goods");
 		try {
-			basketItem.setImageUrl(new URL("https://www.apple.com/de/ipad-air/images/overview/hero__gmn7i7gbziqa_large_2x.jpg"));
+			basketItem.setImageUrl(new URL("https://camo.githubusercontent.com/9f91b59f64690f5e6c710e7281808988f675eb8e62cf5740c91afc2616c76247/68747470733a2f2f6465762e756e7a65722e636f6d2f77702d636f6e74656e742f75706c6f6164732f323032302f30392f556e7a65725f5f5072696d6172794c6f676f5f5261737062657272795f5247422e706e67"));
 		} catch (MalformedURLException e) {
 		}
 		return basketItem;
