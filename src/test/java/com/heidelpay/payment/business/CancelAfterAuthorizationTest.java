@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 
 import org.apache.http.HttpStatus;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.heidelpay.payment.AbstractPayment;
@@ -133,6 +134,7 @@ public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 		assertEquals("pmt-ref", cancel.getPaymentReference());
 	}
 
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testMarketplaceFullAuthorizeCancel() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
@@ -179,7 +181,8 @@ public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 		assertEquals(2, fullCancelPayment.getAuthorizationsList().size());
 		assertEquals(2, fullCancelPayment.getCancelList().size());
 	}
-	
+
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testMarketplacePartialAuthorizeCancel() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;

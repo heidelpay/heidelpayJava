@@ -32,6 +32,7 @@ import java.time.LocalDate;
 import java.util.Currency;
 
 import org.apache.http.HttpStatus;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.heidelpay.payment.AbstractTransaction;
@@ -209,6 +210,7 @@ public class AuthorizationTest extends AbstractPaymentTest {
 		assertEquals("pmt-ref", authorize.getPaymentReference());
 	}
 
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testAuthorizeWithAuthorizeObject() throws MalformedURLException, HttpCommunicationException {
 		Authorization authorization = getAuthorization(createPaymentTypeCard().getId());
@@ -221,6 +223,7 @@ public class AuthorizationTest extends AbstractPaymentTest {
 		assertEquals(new BigDecimal(1.0000).setScale(4), authorize.getAmount());
 	}
 
+	@Ignore("Needs further configuration in Testdata")
 	@Test
 	public void testMarketplaceAuthorize() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;

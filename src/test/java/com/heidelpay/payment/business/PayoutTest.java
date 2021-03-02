@@ -9,9 +9,9 @@ package com.heidelpay.payment.business;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,6 +28,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.Currency;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.heidelpay.payment.Basket;
@@ -38,6 +39,7 @@ import com.heidelpay.payment.paymenttypes.Card;
 
 public class PayoutTest extends AbstractPaymentTest {
 
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testPayoutCardMinimal() throws MalformedURLException, HttpCommunicationException {
 		Card card = createPaymentTypeCard();
@@ -47,17 +49,18 @@ public class PayoutTest extends AbstractPaymentTest {
 		Payout payoutFetched = getHeidelpay().fetchPayout(payout.getPaymentId(), payout.getId());
 		assertPayoutEqual(payout, payoutFetched);
 	}
-	
+
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testPayoutCardWithAllData() throws MalformedURLException, HttpCommunicationException, ParseException {
 		Card card = createPaymentTypeCard();
 		Payout payout = getHeidelpay().payout(getTestPayout(card.getId()));
 		assertNotNull(payout);
 		assertNotNull(payout.getId());
-		
+
 		Payout payoutFetched = getHeidelpay().fetchPayout(payout.getPaymentId(), payout.getId());
 		assertPayoutEqual(payout, payoutFetched);
-		
+
 	}
 
 	private void assertPayoutEqual(Payout payout, Payout payoutFetched) {
