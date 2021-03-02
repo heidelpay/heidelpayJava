@@ -90,7 +90,7 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 		assertEquals("pmt-ref", charge.getPaymentReference());
 	}
 
-	@Ignore("Needs further configuration in Testdata")
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testMarketplaceFullAuthorizeCharge() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
@@ -143,7 +143,7 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 		assertEquals(Payment.State.COMPLETED, fullCapturePayment.getPaymentState());
 	}
 
-	@Ignore("Needs further configuration in Testdata")
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testMarketplaceAuthorizeCharge() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;

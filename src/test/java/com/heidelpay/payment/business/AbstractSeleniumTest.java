@@ -238,21 +238,21 @@ public abstract class AbstractSeleniumTest extends AbstractPaymentTest {
 		paypage.setAmount(BigDecimal.ONE);
 		paypage.setCurrency(Currency.getInstance("EUR"));
 		paypage.setReturnUrl(new URL(getReturnUrl()));
-		paypage.setShopName("Heidelpay Demo Shop");
-		paypage.setShopDescription("Heidelpay Demo Shop Description");
-		paypage.setTagline("Heidelpay Tagline");
-		paypage.setTermsAndConditionUrl(new URL("https://www.heidelpay.com/en/privacy-statement/"));
-		paypage.setPrivacyPolicyUrl(new URL("https://www.heidelpay.com/en/privacy-statement/"));
+		paypage.setShopName("Unzer Demo Shop");
+		paypage.setShopDescription("Unzer Demo Shop Description");
+		paypage.setTagline("Unzer Tagline");
+		paypage.setTermsAndConditionUrl(new URL("https://www.unzer.com/en/privacy-statement/"));
+		paypage.setPrivacyPolicyUrl(new URL("https://www.unzer.com/en/privacy-statement/"));
 		paypage.setCss(getCssMap());
 
-		paypage.setLogoImage("https://camo.githubusercontent.com/9f91b59f64690f5e6c710e7281808988f675eb8e62cf5740c91afc2616c76247/68747470733a2f2f6465762e756e7a65722e636f6d2f77702d636f6e74656e742f75706c6f6164732f323032302f30392f556e7a65725f5f5072696d6172794c6f676f5f5261737062657272795f5247422e706e67");
-		paypage.setFullPageImage("https://www.heidelpay.com/fileadmin/content/header-Imges-neu/Header_Phone_12.jpg");
+		paypage.setLogoImage("https://dev.unzer.de/wp-content/uploads/2020/09/Unzer__PrimaryLogo_Raspberry_RGB-595x272.png");
+		paypage.setFullPageImage("https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-12-pro-family-hero");
 
-		paypage.setContactUrl(new URL("mailto:rene.felder@heidelpay.com"));
-		paypage.setHelpUrl(new URL("https://www.heidelpay.com/de/support/"));
-		paypage.setImprintUrl(new URL("https://www.heidelpay.com/de/imprint/"));
-		paypage.setPrivacyPolicyUrl(new URL("https://www.heidelpay.com/de/datenschutz/"));
-		paypage.setTermsAndConditionUrl(new URL("https://www.heidelpay.com/de/datenschutz/"));
+		paypage.setContactUrl(new URL("mailto:support@unzer.com"));
+		paypage.setHelpUrl(new URL("https://www.unzer.com/en/support/"));
+		paypage.setImprintUrl(new URL("https://www.unzer.com/en/impressum/"));
+		paypage.setPrivacyPolicyUrl(new URL("https://www.unzer.com/en/datenschutz/"));
+		paypage.setTermsAndConditionUrl(new URL("https://www.unzer.com/en/datenschutz/"));
 
 		paypage.setInvoiceId(getRandomId());
 		paypage.setOrderId(getRandomId());
@@ -266,21 +266,21 @@ public abstract class AbstractSeleniumTest extends AbstractPaymentTest {
 		linkpay.setAmount(BigDecimal.ONE);
 		linkpay.setCurrency(Currency.getInstance("EUR"));
 		linkpay.setReturnUrl(new URL(getReturnUrl()));
-		linkpay.setShopName("Heidelpay Demo Shop");
-		linkpay.setShopDescription("Heidelpay Demo Shop Description");
-		linkpay.setTagline("Heidelpay Tagline");
-		linkpay.setTermsAndConditionUrl(new URL("https://www.heidelpay.com/en/privacy-statement/"));
-		linkpay.setPrivacyPolicyUrl(new URL("https://www.heidelpay.com/en/privacy-statement/"));
+		linkpay.setShopName("Unzer Demo Shop");
+		linkpay.setShopDescription("Unzer Demo Shop Description");
+		linkpay.setTagline("Unzer Tagline");
+		linkpay.setTermsAndConditionUrl(new URL("https://www.unzer.com/en/datenschutz/"));
+		linkpay.setPrivacyPolicyUrl(new URL("https://www.unzer.com/en/datenschutz/"));
 		linkpay.setCss(getCssMap());
 
-		linkpay.setLogoImage("https://camo.githubusercontent.com/9f91b59f64690f5e6c710e7281808988f675eb8e62cf5740c91afc2616c76247/68747470733a2f2f6465762e756e7a65722e636f6d2f77702d636f6e74656e742f75706c6f6164732f323032302f30392f556e7a65725f5f5072696d6172794c6f676f5f5261737062657272795f5247422e706e67");
-		linkpay.setFullPageImage("https://www.heidelpay.com/fileadmin/content/header-Imges-neu/Header_Phone_12.jpg");
+		linkpay.setLogoImage("https://dev.unzer.de/wp-content/uploads/2020/09/Unzer__PrimaryLogo_Raspberry_RGB-595x272.png");
+		linkpay.setFullPageImage("https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-12-pro-family-hero");
 
-		linkpay.setContactUrl(new URL("mailto:rene.felder@heidelpay.com"));
-		linkpay.setHelpUrl(new URL("https://www.heidelpay.com/de/support/"));
-		linkpay.setImprintUrl(new URL("https://www.heidelpay.com/de/imprint/"));
-		linkpay.setPrivacyPolicyUrl(new URL("https://www.heidelpay.com/de/datenschutz/"));
-		linkpay.setTermsAndConditionUrl(new URL("https://www.heidelpay.com/de/datenschutz/"));
+		linkpay.setContactUrl(new URL("mailto:support@unzer.com"));
+		linkpay.setHelpUrl(new URL("https://www.unzer.com/en/support/"));
+		linkpay.setImprintUrl(new URL("https://www.unzer.com/en/impressum/"));
+		linkpay.setPrivacyPolicyUrl(new URL("https://www.unzer.com/en/datenschutz/"));
+		linkpay.setTermsAndConditionUrl(new URL("https://www.unzer.com/en/datenschutz/"));
 
 		linkpay.setInvoiceId(getRandomId());
 		linkpay.setOrderId(getRandomId());

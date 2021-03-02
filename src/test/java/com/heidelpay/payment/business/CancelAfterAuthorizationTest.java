@@ -134,7 +134,7 @@ public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 		assertEquals("pmt-ref", cancel.getPaymentReference());
 	}
 
-	@Ignore("Needs further configuration in Testdata")
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testMarketplaceFullAuthorizeCancel() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
@@ -182,7 +182,7 @@ public class CancelAfterAuthorizationTest extends AbstractPaymentTest {
 		assertEquals(2, fullCancelPayment.getCancelList().size());
 	}
 
-	@Ignore("Needs further configuration in Testdata")
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testMarketplacePartialAuthorizeCancel() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;

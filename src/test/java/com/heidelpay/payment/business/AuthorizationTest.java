@@ -210,6 +210,7 @@ public class AuthorizationTest extends AbstractPaymentTest {
 		assertEquals("pmt-ref", authorize.getPaymentReference());
 	}
 
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testAuthorizeWithAuthorizeObject() throws MalformedURLException, HttpCommunicationException {
 		Authorization authorization = getAuthorization(createPaymentTypeCard().getId());

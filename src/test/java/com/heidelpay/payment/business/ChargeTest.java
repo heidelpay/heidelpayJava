@@ -239,7 +239,7 @@ public class ChargeTest extends AbstractPaymentTest {
 				.toJson(charge).getClass());
 	}
 
-	@Ignore("Needs further configuration in Testdata")
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testMarketplaceChargeWithCard() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
@@ -282,7 +282,7 @@ public class ChargeTest extends AbstractPaymentTest {
 		assertEquals(Payment.State.PENDING, payment.getPaymentState());
 	}
 
-	@Ignore("Needs further configuration in Testdata")
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testMarketplaceChargeWithSepaDirectDebit() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
@@ -324,7 +324,7 @@ public class ChargeTest extends AbstractPaymentTest {
 		assertEquals(Payment.State.COMPLETED, payment.getPaymentState());
 	}
 
-	@Ignore("Needs further configuration in Testdata")
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testMarketplaceChargeWithSofort() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
