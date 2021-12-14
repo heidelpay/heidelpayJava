@@ -582,7 +582,7 @@ public abstract class AbstractPaymentTest {
 		basketItem.setSubTitle("XS in Red");
 		basketItem.setType("goods");
 		try {
-			basketItem.setImageUrl(new URL("https://www.apple.com/v/iphone-xs/d/images/overview/hero_top_device_large_2x.jpg"));
+			basketItem.setImageUrl(new URL("https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-12-pro-family-hero"));
 		} catch (MalformedURLException e) {
 		}
 		return basketItem;
@@ -603,7 +603,7 @@ public abstract class AbstractPaymentTest {
 		basketItem.setSubTitle("Nicht nur Pros brauchen Power.");
 		basketItem.setType("goods");
 		try {
-			basketItem.setImageUrl(new URL("https://www.apple.com/de/ipad-air/images/overview/hero__gmn7i7gbziqa_large_2x.jpg"));
+			basketItem.setImageUrl(new URL("https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-12-pro-family-hero"));
 		} catch (MalformedURLException e) {
 		}
 		return basketItem;

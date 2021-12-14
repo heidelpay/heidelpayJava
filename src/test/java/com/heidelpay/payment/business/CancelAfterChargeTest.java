@@ -30,6 +30,7 @@ import java.net.URL;
 import java.util.Currency;
 
 import org.apache.http.HttpStatus;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.heidelpay.payment.AbstractPayment;
@@ -126,6 +127,7 @@ public class CancelAfterChargeTest extends AbstractPaymentTest {
 	}
 
 	@Test
+	@Ignore("Needs further configuration in Testdata")
 	public void testMarketplaceFullCancelChargeWithCard() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
 		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;
@@ -180,6 +182,7 @@ public class CancelAfterChargeTest extends AbstractPaymentTest {
 	}
 	
 	@Test
+	@Ignore("Needs further configuration in Testdata")
 	public void testMarketplacePartialCancelChargeWithCard() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
 		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;
