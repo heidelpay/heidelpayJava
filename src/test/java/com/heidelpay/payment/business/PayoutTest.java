@@ -28,6 +28,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.Currency;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.heidelpay.payment.Basket;
@@ -38,6 +39,7 @@ import com.heidelpay.payment.paymenttypes.Card;
 
 public class PayoutTest extends AbstractPaymentTest {
 
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testPayoutCardMinimal() throws MalformedURLException, HttpCommunicationException {
 		Card card = createPaymentTypeCard();
@@ -47,7 +49,8 @@ public class PayoutTest extends AbstractPaymentTest {
 		Payout payoutFetched = getHeidelpay().fetchPayout(payout.getPaymentId(), payout.getId());
 		assertPayoutEqual(payout, payoutFetched);
 	}
-	
+
+	@Ignore("Further Configuration needed")
 	@Test
 	public void testPayoutCardWithAllData() throws MalformedURLException, HttpCommunicationException, ParseException {
 		Card card = createPaymentTypeCard();

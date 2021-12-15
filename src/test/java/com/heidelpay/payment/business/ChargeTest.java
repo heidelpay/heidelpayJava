@@ -30,6 +30,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Currency;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -48,18 +49,6 @@ import com.heidelpay.payment.paymenttypes.SepaDirectDebit;
 import com.heidelpay.payment.paymenttypes.Sofort;
 
 public class ChargeTest extends AbstractPaymentTest {
-
-	@Test
-	public void testChargeWithTypeIdAndEndPoint() throws MalformedURLException, HttpCommunicationException {
-		Card card = getPaymentTypeCard("4444333322221111");
-		card = (Card)getHeidelpayWithEndPoint("https://dev-api.heidelpay.com/v1/").createPaymentType(card);
-
-		Charge charge = getHeidelpayWithEndPoint("https://dev-api.heidelpay.com/v1/").charge(BigDecimal.ONE, Currency.getInstance("EUR"), card.getId(), new URL("https://integration.splitit.com//gateways/Proxy/Execute?publicToken=9e517919-9e3d-4d5f-825e-99f7712eefd1"), false);
-		assertNotNull(charge);
-		assertNotNull(charge.getId());
-		assertEquals("COR.000.100.112", charge.getMessage().getCode());
-		assertNotNull(charge.getMessage().getCustomer());
-	}
 
 	@Test
 	public void testChargeWithTypeId() throws MalformedURLException, HttpCommunicationException {
@@ -238,6 +227,7 @@ public class ChargeTest extends AbstractPaymentTest {
 	}
 	
 	@Test
+	@Ignore("Needs further configuration in Testdata")
 	public void testMarketplaceChargeWithCard() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
 		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;
@@ -280,6 +270,7 @@ public class ChargeTest extends AbstractPaymentTest {
 	}
 	
 	@Test
+	@Ignore("Needs further configuration in Testdata")
 	public void testMarketplaceChargeWithSepaDirectDebit() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
 		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;
@@ -321,6 +312,7 @@ public class ChargeTest extends AbstractPaymentTest {
 	}
 	
 	@Test
+	@Ignore("Needs further configuration in Testdata")
 	public void testMarketplaceChargeWithSofort() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
 		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;

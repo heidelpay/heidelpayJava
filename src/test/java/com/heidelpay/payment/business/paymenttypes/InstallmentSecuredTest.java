@@ -51,7 +51,7 @@ public class InstallmentSecuredTest extends AbstractPaymentTest {
 		Date orderDate = getDate("21.06.2019");
 		List<InstallmentSecuredRatePlan> rateList = getHeidelpay().installmentSecuredRates(BigDecimal.TEN, Currency.getInstance("EUR"), effectiveInterestRate, orderDate);
 		assertNotNull(rateList);
-		assertEquals(6, rateList.size());
+		assertEquals(4, rateList.size());
 		assertInstallmentSecuredRatePlan(effectiveInterestRate, orderDate, rateList.get(0));
 	}
 
