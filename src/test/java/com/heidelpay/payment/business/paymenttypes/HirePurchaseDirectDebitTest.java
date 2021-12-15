@@ -51,7 +51,7 @@ public class HirePurchaseDirectDebitTest extends AbstractPaymentTest {
 		Date orderDate = getDate("21.06.2019");
 		List<HirePurchaseRatePlan> rateList = getHeidelpay().hirePurchaseRates(BigDecimal.TEN, Currency.getInstance("EUR"), effectiveInterestRate, orderDate);
 		assertNotNull(rateList);
-		assertEquals(6, rateList.size());
+		assertEquals(4, rateList.size());
 		assertRatePlan(effectiveInterestRate, orderDate, rateList.get(0));
 	}
 

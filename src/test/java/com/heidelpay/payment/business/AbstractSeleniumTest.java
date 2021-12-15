@@ -245,8 +245,8 @@ public abstract class AbstractSeleniumTest extends AbstractPaymentTest {
 		paypage.setPrivacyPolicyUrl(new URL("https://www.heidelpay.com/en/privacy-statement/"));
 		paypage.setCss(getCssMap());
 
-		paypage.setLogoImage("https://www.heidelpay.com/typo3conf/ext/heidelpay_site/Resources/Public/Images/Heidelpay-Logo_mitUnterzeile-orange.svg");
-		paypage.setFullPageImage("https://www.heidelpay.com/fileadmin/content/header-Imges-neu/Header_Phone_12.jpg");
+		paypage.setLogoImage("https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-12-pro-family-hero");
+		paypage.setFullPageImage("https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-12-pro-family-hero");
 
 		paypage.setContactUrl(new URL("mailto:rene.felder@heidelpay.com"));
 		paypage.setHelpUrl(new URL("https://www.heidelpay.com/de/support/"));
@@ -273,8 +273,8 @@ public abstract class AbstractSeleniumTest extends AbstractPaymentTest {
 		linkpay.setPrivacyPolicyUrl(new URL("https://www.heidelpay.com/en/privacy-statement/"));
 		linkpay.setCss(getCssMap());
 
-		linkpay.setLogoImage("https://www.heidelpay.com/typo3conf/ext/heidelpay_site/Resources/Public/Images/Heidelpay-Logo_mitUnterzeile-orange.svg");
-		linkpay.setFullPageImage("https://www.heidelpay.com/fileadmin/content/header-Imges-neu/Header_Phone_12.jpg");
+		linkpay.setLogoImage("https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-12-pro-family-hero");
+		linkpay.setFullPageImage("https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-12-pro-family-hero");
 
 		linkpay.setContactUrl(new URL("mailto:rene.felder@heidelpay.com"));
 		linkpay.setHelpUrl(new URL("https://www.heidelpay.com/de/support/"));

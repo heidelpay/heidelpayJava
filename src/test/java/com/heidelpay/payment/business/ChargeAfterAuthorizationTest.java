@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 
 import org.apache.http.HttpStatus;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.heidelpay.payment.AbstractTransaction;
@@ -90,6 +91,7 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 	}
 	
 	@Test
+	@Ignore("Needs further configuration in Testdata")
 	public void testMarketplaceFullAuthorizeCharge() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
 		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;
@@ -142,6 +144,7 @@ public class ChargeAfterAuthorizationTest extends AbstractPaymentTest {
 	}
 	
 	@Test
+	@Ignore("Needs further configuration in Testdata")
 	public void testMarketplaceAuthorizeCharge() throws MalformedURLException, HttpCommunicationException {
 		String participantId_1 = MARKETPLACE_PARTICIPANT_ID_1;
 		String participantId_2 = MARKETPLACE_PARTICIPANT_ID_2;
