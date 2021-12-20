@@ -13,7 +13,7 @@ Java 1.6 or later.
 <dependency>
   <groupId>com.heidelpay.payment</groupId>
   <artifactId>heidelpayJava</artifactId>
-  <version>1.11.2.3</version>
+  <version>1.11.2.4</version>
 </dependency>
 ```
 
